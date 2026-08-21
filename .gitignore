@@ -1,0 +1,32 @@
+# ProductOS system materials (licensed to the member, never committed)
+productos/
+
+# Python
+backend/.venv/
+**/__pycache__/
+*.pyc
+
+# Node
+node_modules/
+frontend/dist/
+
+# Local data & secrets
+*.db
+.env
+.env.*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local agent / editor config
+.claude/
+
+# PyInstaller build artifacts
+backend/build/
+backend/dist/
+backend/*.spec
+
+# Bundled input pack (extracted content lives in docs/reference/day1-pack)
+Smart_Asset_Management_Day1_Developer_Pack.zip
+frontend/tsconfig.tsbuildinfo

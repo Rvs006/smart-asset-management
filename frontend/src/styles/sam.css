@@ -1,0 +1,84 @@
+/* SAM-specific additions on top of the SCT design system.
+   Only the register grid's validation tints + a few layout helpers live here;
+   everything else reuses SCT class names. */
+
+.sam-toolbar {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.sam-toolbar .grow { flex: 1 1 220px; }
+
+/* Register grid: validation on the cell */
+.sam-grid td.cell-bad { background: var(--red-bg); }
+.sam-grid td.cell-warn { background: var(--amber-bg); }
+.sam-grid td.cell-bad input,
+.sam-grid td.cell-warn input,
+.sam-grid td.cell-bad select,
+.sam-grid td.cell-warn select { background: transparent; }
+.sam-grid td .cell-input,
+.sam-grid td .cell-select {
+  width: 100%;
+  min-width: 90px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  padding: 3px 5px;
+  border-radius: 6px;
+}
+.sam-grid td .cell-input:focus,
+.sam-grid td .cell-select:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: var(--surface);
+}
+.sam-grid tr.selected td { background: var(--accent-bg); }
+.sam-grid td .id-main { font-weight: 700; color: var(--ink); }
+.sam-grid td .id-sub { display: block; color: var(--muted); font-size: 11px; margin-top: 2px; }
+
+.sam-clickable { cursor: pointer; }
+
+/* selected-asset detail: reuse SCT surface; toggle tabs use secondary-button.selected */
+.sam-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px 24px;
+}
+.sam-detail-grid > div { border-bottom: 1px solid var(--border-soft); padding: 7px 0; }
+.sam-detail-grid span { color: var(--muted); display: block; font-size: 11px; }
+.sam-detail-grid b { color: var(--ink); }
+
+.sam-fault-row {
+  display: grid;
+  grid-template-columns: 150px 1fr auto auto;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-soft);
+}
+.sam-fault-row:last-child { border-bottom: none; }
+
+.sam-refgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+.sam-refgrid .impbox {
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.sam-namepreview {
+  font-family: var(--mono, "SF Mono", Consolas, monospace);
+  font-size: 18px;
+  color: var(--accent);
+  background: var(--accent-bg);
+  padding: 10px 14px;
+  border-radius: 8px;
+  width: fit-content;
+  margin-top: 10px;
+}

@@ -1,0 +1,3479 @@
+/* Hallmark · pre-emit critique: P5 H4 E5 S5 R5 V4 · genre: enterprise utility · tone: restrained · anchor: teal */
+/* Hallmark · macrostructure: Operator workbench · run > summary > table > inspector > report · nav: existing workbench · footer: n/a */
+/* Hallmark · gates: slop scoped-code pass · contrast: pass (40–41) · honest: pass (46) · chrome: pass (47) · tokens: pass (48) · icons: pass (30) */
+/* Hallmark · gates: spacing: diff pass (24; legacy scale exception) · responsive/mobile: browser pass at 1440, 1280, 1024, 768, 414, 390, 375, and 320 px (34, 49–57) */
+
+:root {
+  color-scheme: light;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
+  --bg: #f5f5f7;
+  --surface: #ffffff;
+  --surface-2: #f2f2f7;
+  --surface-3: #e5e5ea;
+  --border: rgba(0, 0, 0, 0.08);
+  --border-soft: rgba(0, 0, 0, 0.06);
+  --ink: #1d1d1f;
+  --text: #424245;
+  --muted: #86868b;
+  --accent: #0071e3;
+  --accent-hover: #0077ed;
+  --accent-bg: rgba(0, 113, 227, 0.06);
+  --green: #248a3d;
+  --green-bg: rgba(52, 199, 89, 0.08);
+  --amber: #c77c00;
+  --amber-bg: rgba(255, 159, 10, 0.08);
+  --red: #d70015;
+  --red-bg: rgba(255, 59, 48, 0.08);
+  --purple: #8944ab;
+  --purple-bg: rgba(175, 82, 222, 0.08);
+  --code: #1e1e2e;
+  --scrim: rgba(0, 0, 0, 0.46);
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-strong: 0 1px 4px rgba(0, 0, 0, 0.06);
+  --dialog-shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
+  --control-height: 44px;
+  --control-height-compact: 36px;
+  --control-check-size: 18px;
+  --radius: 10px;
+  --radius-sm: 8px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  overflow-x: clip;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 13px;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  border: 0;
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.64;
+}
+
+input:not([type="checkbox"]):not([type="radio"]),
+select,
+textarea {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  min-height: var(--control-height);
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink);
+  transition:
+    border-color 150ms ease,
+    background 150ms ease;
+}
+
+select {
+  overflow: hidden;
+  padding-right: 32px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+textarea {
+  line-height: 1.45;
+  resize: vertical;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  flex: 0 0 auto;
+  width: var(--control-check-size);
+  min-width: var(--control-check-size);
+  height: var(--control-check-size);
+  min-height: var(--control-check-size);
+  margin: 0;
+  padding: 0;
+  accent-color: var(--accent);
+}
+
+input[type="file"] {
+  padding: 4px;
+  color: var(--text);
+  font-size: 12px;
+}
+
+input[type="file"]::file-selector-button {
+  min-height: 28px;
+  margin-right: 9px;
+  padding: 5px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  color: var(--text);
+  font: inherit;
+  font-weight: 650;
+}
+
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  border-color: var(--accent);
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+input:not([type="checkbox"]):not([type="radio"]):disabled,
+select:disabled,
+textarea:disabled {
+  border-color: var(--border-soft);
+  background: var(--surface-2);
+  color: var(--muted);
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+input[readonly],
+textarea[readonly] {
+  border-color: var(--border-soft);
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+label {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  color: var(--text);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.console-shell {
+  max-width: 100%;
+  min-height: 100vh;
+  background: transparent;
+  color: var(--ink);
+  overflow-x: clip;
+}
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  border-bottom: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: saturate(180%) blur(20px);
+}
+
+.app-brand-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 11px 24px 9px;
+}
+
+.app-brand {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+}
+
+.app-brand-title {
+  color: var(--ink);
+  font-size: 18px;
+  font-weight: 760;
+}
+
+.app-brand-kind,
+.app-tab-num,
+.eyebrow {
+  font-family: "SF Mono", SFMono-Regular, Consolas, "Courier New", monospace;
+}
+
+.app-brand-kind {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 650;
+  text-transform: uppercase;
+}
+
+.app-header-meta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.site-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 30px;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: 980px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 11px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.site-pill.subtle {
+  background: var(--accent-bg);
+  border-color: transparent;
+  color: var(--accent);
+}
+
+.site-pill-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 0 3px var(--green-bg);
+}
+
+.app-tabs {
+  display: flex;
+  gap: 6px;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 24px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.app-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.app-tab {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 42px;
+  padding: 10px 16px;
+  border-bottom: 3px solid transparent;
+  border-radius: 8px 8px 0 0;
+  color: var(--text);
+  white-space: nowrap;
+  transition:
+    background 150ms ease,
+    color 150ms ease,
+    border-color 150ms ease;
+}
+
+.app-tab:hover {
+  background: var(--surface-2);
+  color: var(--ink);
+}
+
+.app-tab.active {
+  border-bottom-color: var(--accent);
+  background: var(--surface);
+  color: var(--accent);
+}
+
+.app-tab-num {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.app-tab.active .app-tab-num {
+  color: var(--accent);
+}
+
+.app-tab-label {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.workspace-shell {
+  max-width: 100%;
+  min-width: 0;
+}
+
+.page-titlebar {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 26px 24px 0;
+}
+
+.page-titlebar h1 {
+  margin: 6px 0 0;
+  color: var(--ink);
+  font-size: 32px;
+  line-height: 1.15;
+}
+
+.page-titlebar p {
+  max-width: 680px;
+  margin: 8px 0 0;
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.page-frame {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 24px 24px 60px;
+  overflow-x: clip;
+}
+
+.app-page,
+.stack,
+.form-stack {
+  display: grid;
+  gap: 16px;
+}
+
+.eyebrow {
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 760;
+  text-transform: uppercase;
+}
+
+.muted {
+  color: var(--text);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.home-overview,
+.module-hero,
+.hero {
+  display: grid;
+  gap: 16px;
+  align-items: stretch;
+}
+
+.home-overview,
+.hero {
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 360px);
+}
+
+.home-overview {
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-strong);
+}
+
+.module-hero {
+  grid-template-columns: minmax(0, 360px);
+  align-items: end;
+  padding: 8px 0 20px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  scroll-margin-top: 180px;
+}
+
+.module-hero-workbench {
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.54fr);
+  align-items: stretch;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-strong);
+}
+
+.module-hero-workbench .module-hero-copy {
+  align-content: center;
+}
+
+.module-hero-workbench .module-metrics {
+  gap: 10px;
+}
+
+.module-hero-workbench .module-metrics article {
+  align-content: center;
+  min-height: 96px;
+  padding: 15px;
+  border: 1px solid var(--border-soft);
+  border-top: 3px solid var(--green);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+  box-shadow: var(--shadow);
+}
+
+.module-hero-workbench .module-metrics article:nth-child(2) {
+  border-top-color: var(--amber);
+}
+
+.module-hero-workbench .module-metrics span {
+  color: var(--text);
+}
+
+.module-hero-workbench .module-metrics-empty {
+  grid-column: 1 / -1;
+  border-top-color: var(--muted);
+}
+
+.module-hero > div:first-child {
+  display: grid;
+  align-content: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.overview-copy,
+.readiness-panel,
+.hero-banner,
+.hero-side,
+.surface,
+.config-section,
+.kpi-strip article,
+.metric,
+.panel,
+.state-panel,
+.schema-card,
+.workflow-stage,
+.run-card,
+.issue-card,
+.empty-workspace {
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.overview-copy {
+  display: grid;
+  align-content: center;
+  gap: 9px;
+  min-height: 150px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.readiness-panel,
+.hero-side {
+  display: grid;
+  align-content: center;
+  gap: 12px;
+  padding: 18px;
+}
+
+.overview-copy h2,
+.module-hero h1,
+.module-hero h2,
+.hero-banner h2 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 28px;
+  line-height: 1.12;
+}
+
+.overview-copy p,
+.module-hero p,
+.hero-banner p {
+  max-width: 760px;
+  margin: 0;
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.home-brief {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: 18px;
+  align-items: stretch;
+}
+
+.brief-copy {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  min-width: 0;
+}
+
+.brief-copy h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 20px;
+  line-height: 1.2;
+}
+
+.brief-copy p,
+.brief-note span,
+.brief-step small {
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.brief-copy p,
+.brief-note {
+  max-width: 620px;
+}
+
+.brief-route {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  min-width: 0;
+}
+
+.brief-step {
+  display: grid;
+  align-content: start;
+  gap: 7px;
+  min-width: 0;
+  min-height: 158px;
+  padding: 13px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  transition:
+    border-color 150ms ease,
+    background 150ms ease;
+}
+
+.brief-step:hover {
+  border-color: var(--accent);
+  background: var(--accent-bg);
+}
+
+.brief-step b {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--on-accent, #ffffff);
+  font-size: 12px;
+}
+
+.brief-step span {
+  color: var(--ink);
+  font-weight: 760;
+}
+
+.brief-step small {
+  overflow-wrap: anywhere;
+}
+
+.brief-note {
+  display: grid;
+  gap: 4px;
+  margin-top: 4px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-soft);
+}
+
+.brief-note strong {
+  color: var(--ink);
+}
+
+.hero-banner,
+.surface,
+.config-section,
+.panel {
+  padding: 18px;
+}
+
+.hero-banner {
+  display: grid;
+  align-content: center;
+  gap: 12px;
+  background: var(--surface);
+}
+
+.readiness-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.readiness-row span,
+.kpi-strip span,
+.metric span,
+.module-metrics span,
+.summary-grid dt {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 760;
+  text-transform: uppercase;
+}
+
+.readiness-row strong,
+.kpi-strip strong,
+.metric strong,
+.module-metrics strong,
+.evidence-summary strong {
+  color: var(--ink);
+  font-size: 24px;
+  line-height: 1;
+}
+
+.readiness-panel small,
+.kpi-strip small,
+.metric small,
+.evidence-summary span {
+  color: var(--text);
+}
+
+.home-actions,
+.topbar-actions,
+.hero-actions,
+.chip-row,
+.report-list-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.report-list-heading:focus-visible {
+  border-radius: var(--radius-sm);
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.primary-button,
+.secondary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--control-height);
+  padding: 8px 15px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  transition:
+    background 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease;
+}
+
+.primary-button {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--on-accent, #ffffff);
+}
+
+.primary-button:disabled {
+  border-color: var(--border);
+  background: var(--surface-3);
+  color: var(--muted);
+}
+
+.secondary-button:hover {
+  border-color: var(--accent-hover);
+  background: var(--accent-bg);
+  color: var(--accent-hover);
+}
+
+.secondary-button.selected {
+  border-color: var(--accent-hover);
+  background: var(--accent-bg);
+  color: var(--accent-hover);
+}
+
+.secondary-button.destructive {
+  color: var(--red);
+}
+
+.secondary-button.destructive:not(:disabled):hover {
+  border-color: var(--red);
+  background: var(--red-bg);
+  color: var(--red);
+}
+
+.secondary-button.destructive:disabled,
+.secondary-button.destructive:disabled:hover {
+  border-color: var(--border);
+  background: var(--surface);
+  color: var(--muted);
+}
+
+.primary-button:not(:disabled):hover {
+  border-color: var(--accent-hover);
+  background: var(--accent-hover);
+}
+
+.compact {
+  min-height: var(--control-height-compact);
+  padding: 6px 11px;
+}
+
+.status-pill,
+.chip,
+.status-token {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  border-radius: 980px;
+  font-size: 10px;
+  font-weight: 760;
+}
+
+.status-pill,
+.chip {
+  padding: 5px 9px;
+  background: var(--green-bg);
+  color: var(--green);
+}
+
+.status-pill.amber,
+.chip.amber {
+  background: var(--amber-bg);
+  color: var(--amber);
+}
+
+.chip {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.chip.green {
+  background: var(--green-bg);
+  color: var(--green);
+}
+
+.chip.red {
+  background: var(--red-bg);
+  color: var(--red);
+}
+
+.kpi-strip,
+.metric-grid,
+.list-grid,
+.config-grid,
+.operations-grid,
+.app-grid {
+  display: grid;
+  align-items: start;
+  gap: 14px;
+}
+
+.kpi-strip {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.compact-kpis {
+  gap: 12px;
+}
+
+.live-run-console {
+  display: grid;
+  gap: 14px;
+  margin: 16px 0;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: 10px;
+  background: var(--surface-raised, var(--surface));
+}
+.live-console-heading,
+.live-console-status,
+.live-console-label,
+.live-console-kpis,
+.live-console-grid {
+  display: flex;
+  gap: 12px;
+}
+.live-console-heading,
+.live-console-label {
+  justify-content: space-between;
+}
+.live-console-heading h3 {
+  margin: 3px 0;
+  font-size: 16px;
+}
+.live-console-heading p,
+.live-console-chart > small,
+.live-console-empty,
+.live-console-heartbeat-note,
+.live-console-topic-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+.live-console-status {
+  align-items: center;
+}
+.live-console-pulse {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 0 4px var(--green-bg);
+}
+.live-console-kpis {
+  flex-wrap: wrap;
+}
+.live-console-kpis > div {
+  display: grid;
+  flex: 1 1 8rem;
+  gap: 3px;
+  padding-left: 10px;
+  border-left: 2px solid var(--line);
+}
+.live-console-kpis span,
+.live-console-label,
+.live-console-events time {
+  color: var(--muted);
+  font-size: 11px;
+}
+.live-console-kpis strong {
+  color: var(--ink);
+  font-size: 14px;
+}
+.live-console-grid {
+  align-items: stretch;
+}
+.live-console-chart,
+.live-console-events,
+.live-console-topic-evidence {
+  flex: 1 1 18rem;
+  min-width: 0;
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--accent-bg);
+}
+.live-console-chart svg {
+  display: block;
+  width: 100%;
+  height: 8rem;
+  margin: 8px 0;
+}
+.live-console-chart line {
+  stroke: var(--line);
+  stroke-width: 0.6;
+}
+.live-console-chart polyline {
+  stroke: var(--accent);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.5;
+}
+.live-console-chart polyline.live-console-expected-trace {
+  stroke: var(--muted);
+  stroke-dasharray: 3 3;
+  stroke-width: 1.5;
+}
+.live-console-observed-point {
+  fill: var(--accent);
+}
+.live-console-evidence-count {
+  display: grid;
+  gap: 2px;
+  margin: 8px 0 0;
+}
+.live-console-evidence-count strong {
+  color: var(--ink);
+  font-size: 15px;
+}
+.live-console-evidence-count span {
+  color: var(--muted);
+  font-size: 11px;
+}
+.live-console-heartbeat-note {
+  margin-top: 8px;
+}
+.live-console-events ol {
+  display: grid;
+  gap: 8px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.live-console-events li {
+  display: grid;
+  gap: 2px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+}
+.live-console-events li:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+.live-console-topic-evidence {
+  display: grid;
+  gap: 10px;
+}
+.live-console-topic-statuses {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+}
+.live-console-topic-statuses > div {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  padding: 8px;
+  border-top: 2px solid var(--line);
+  background: var(--surface-raised, var(--surface));
+}
+.live-console-topic-statuses dt {
+  color: var(--muted);
+  font-size: 11px;
+}
+.live-console-topic-statuses dd {
+  margin: 0;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 700;
+}
+.live-console-topic-statuses .topic-status-expected {
+  border-top-color: var(--green);
+}
+.live-console-topic-statuses .topic-status-alternate {
+  border-top-color: var(--amber);
+}
+
+.kpi-strip article,
+.metric {
+  display: grid;
+  gap: 6px;
+  padding: 16px 18px;
+  border-top: 3px solid var(--accent);
+}
+
+.kpi-strip .danger {
+  border-top-color: var(--red);
+}
+
+.kpi-strip .danger strong {
+  color: var(--red);
+}
+
+.two-col,
+.list-grid,
+.operations-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.home-main-grid,
+.home-support-grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.metric-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.config-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.surface,
+.config-section,
+.hero-banner,
+.hero-side {
+  min-width: 0;
+}
+
+.config-section {
+  border-top: 3px solid var(--accent);
+}
+
+.surface-heading,
+.section-heading,
+.run-monitor-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.surface-heading h3,
+.section-heading h3,
+.panel h3,
+.hero-side h2 {
+  margin: 3px 0 0;
+  color: var(--ink);
+  font-size: 16px;
+}
+
+/* Marks UI areas that show preview data with no backing endpoint yet. */
+.sample-tag {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 4px 9px;
+  border-radius: 980px;
+  background: var(--amber-bg);
+  color: var(--amber);
+  font-size: 10px;
+  font-weight: 760;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.sample-banner {
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: var(--amber-bg);
+  color: var(--amber);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Honesty-critical: a SIMULATED BACnet result must never read like a real scan.
+   Red + heavier weight makes the demo-data warning stand apart from the neutral
+   amber "live observations" note. */
+.sample-banner.warning {
+  background: var(--red-bg);
+  color: var(--red);
+  font-weight: 720;
+}
+
+.hero-side h2 {
+  margin: 0;
+}
+
+.section-heading > div > span {
+  color: var(--accent);
+  font-family: "SF Mono", SFMono-Regular, Consolas, "Courier New", monospace;
+  font-size: 10px;
+  font-weight: 760;
+  text-transform: uppercase;
+}
+
+.section-heading label {
+  min-width: 160px;
+}
+
+.workflow-board,
+.run-list,
+.issue-list,
+.detail-list,
+.mode-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.workflow-stage,
+.run-card,
+.issue-card,
+.empty-workspace,
+.schema-card,
+.mode-card {
+  gap: 12px;
+  padding: 13px;
+}
+
+.workflow-stage,
+.run-card {
+  display: flex;
+  justify-content: space-between;
+}
+
+.workflow-stage {
+  border-left: 4px solid var(--accent);
+}
+
+.workflow-stage.ready {
+  border-left-color: var(--green);
+}
+
+.workflow-stage.warning,
+.workflow-stage.queued {
+  border-left-color: var(--amber);
+}
+
+.workflow-stage.failed {
+  border-left-color: var(--red);
+}
+
+.workflow-stage.running {
+  border-left-color: var(--accent);
+}
+
+.workflow-stage p,
+.run-card span,
+.issue-card small,
+.empty-workspace span,
+.schema-card p {
+  margin: 4px 0 0;
+  color: var(--text);
+  line-height: 1.45;
+}
+
+.workflow-stage > span {
+  flex: 0 0 auto;
+  align-self: center;
+  color: var(--accent);
+  font-weight: 760;
+}
+
+.run-card {
+  align-items: center;
+}
+
+.run-card > div:first-child,
+.run-monitor-heading > div {
+  display: grid;
+  gap: 3px;
+}
+
+.mode-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.mode-card {
+  display: grid;
+  min-height: 178px;
+  border-top: 3px solid var(--accent);
+}
+
+.mode-card span {
+  color: var(--accent);
+  font-family: "SF Mono", SFMono-Regular, Consolas, "Courier New", monospace;
+  font-size: 10px;
+  font-weight: 760;
+}
+
+.mode-card strong {
+  color: var(--ink);
+  font-size: 15px;
+}
+
+.mode-card p,
+.mode-card small,
+.detail-row span,
+.template-inspector .section-copy {
+  margin: 0;
+  color: var(--text);
+  line-height: 1.45;
+}
+
+.mode-card small {
+  align-self: end;
+  color: var(--muted);
+}
+
+.detail-list {
+  margin-bottom: 12px;
+}
+
+.detail-row {
+  display: grid;
+  gap: 5px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.detail-row:last-child {
+  border-bottom: 0;
+}
+
+.detail-row span {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 760;
+  text-transform: uppercase;
+}
+
+.detail-row strong {
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+.inspector .surface-heading {
+  margin-bottom: 4px;
+}
+
+.inspector .detail-list {
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0 16px;
+  margin-bottom: 8px;
+}
+
+.inspector .detail-row {
+  gap: 4px;
+  padding: 8px 0;
+}
+
+/* Discovery-only native detail dialog. The UDMI Workbench routes View Issues
+   into its persistent Inspector instead of opening this surface. */
+.result-detail-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  margin: auto;
+  width: min(440px, calc(100vw - 32px));
+  max-height: calc(100dvh - 48px);
+  overflow-y: auto;
+  color: var(--text);
+  box-shadow: var(--dialog-shadow);
+}
+
+.result-detail-dialog::backdrop {
+  background: var(--scrim);
+}
+
+.progress-block {
+  display: grid;
+  justify-items: end;
+  gap: 6px;
+  min-width: 150px;
+}
+
+.run-monitor {
+  display: grid;
+  gap: 12px;
+}
+
+.progress-track {
+  width: 100%;
+  height: 8px;
+  overflow: hidden;
+  border-radius: 980px;
+  background: var(--surface-3);
+}
+
+.progress-track div {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+}
+
+/* Indeterminate run progress (ITEM-6): an indefinite/unknown-window run shows a
+   quiet fixed-width bar sweeping the full track with stable rounded caps. The
+   track's overflow:hidden clips it cleanly. prefers-reduced-motion drops the
+   sweep for a static partial fill so the bar is never blank and never stutters. */
+.progress-track.indeterminate div {
+  width: 35%;
+  animation: progress-sweep 1.4s ease-in-out infinite;
+}
+
+@keyframes progress-sweep {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(320%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progress-track.indeterminate div {
+    width: 15%;
+    animation: none;
+    transform: none;
+  }
+}
+
+.status-token {
+  padding: 4px 8px;
+  text-transform: uppercase;
+}
+
+.status-token.ready {
+  background: var(--green-bg);
+  color: var(--green);
+}
+
+.status-token.running {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.status-token.warning,
+.status-token.queued {
+  background: var(--amber-bg);
+  color: var(--amber);
+}
+
+.status-token.failed {
+  background: var(--red-bg);
+  color: var(--red);
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+}
+
+.summary-grid div {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+
+.summary-grid dt,
+.summary-grid dd {
+  margin: 0;
+}
+
+.summary-grid dd {
+  overflow-wrap: anywhere;
+  color: var(--ink);
+  font-weight: 760;
+}
+
+.error-text {
+  color: var(--red);
+  font-weight: 760;
+}
+
+.data-table-wrap {
+  max-width: 100%;
+  /* Safety valve only: body clips page-level overflow, so an ultra-wide table with
+     no scroller here would be clipped and unreachable. After the min-width and
+     cell-nowrap removals below, content wraps into page flow and this should
+     not engage at desktop widths. Do NOT add a max-height to the BASE class —
+     the deliberate exception is the .results-scroll modifier below, which keeps
+     overflow on both axes so nothing is ever clipped unreachable. */
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+/* Opt-in bounded, scrollable results table (ISSUE-4): a long results/capture
+   table scrolls inside its own box instead of taking over the page. overflow is
+   kept on BOTH axes so a wide table is never clipped unreachable (the reason the
+   base class forbids a blanket max-height). */
+.data-table-wrap.results-scroll {
+  max-height: min(60vh, 560px);
+  overflow: auto;
+}
+
+/* Sticky header for the scrollable results table so column names stay visible
+   while the body scrolls. th already carries an opaque --surface-2 background. */
+.results-scroll .data-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+/* Reports carry durable evidence identifiers, filenames, and actions across up
+   to eleven columns. Keep those fields readable at a real desktop viewport:
+   the existing results-scroll wrapper intentionally supplies horizontal scroll
+   instead of forcing one-character wrapping into an unusable table. */
+.report-list-table {
+  min-width: 1320px;
+}
+
+.report-list-table td,
+.report-list-table th {
+  white-space: nowrap;
+}
+
+.report-list-table .report-name-cell {
+  white-space: normal;
+}
+
+/* Results filter bar (ISSUE-4): free-text + verdict-tone filters above the
+   scrollable results table, with an honest "showing N of M" count. */
+.results-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.results-filter-bar label {
+  display: grid;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 760;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+
+.results-filter-bar input,
+.results-filter-bar select,
+.results-filter-bar .primary-button,
+.results-filter-bar .secondary-button {
+  min-height: var(--control-height);
+}
+
+.results-filter-text {
+  flex: 1 1 220px;
+}
+
+.secondary-button:active,
+.primary-button:not(:disabled):active {
+  filter: brightness(0.96);
+}
+
+.results-topic-filter {
+  flex-basis: 190px;
+}
+
+.results-filter-count {
+  margin-left: auto;
+  align-self: center;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--surface);
+  font-variant-numeric: tabular-nums;
+}
+
+.data-table th {
+  background: var(--surface-2);
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 760;
+  text-align: left;
+  text-transform: uppercase;
+  /* Headers stay on one line; cells wrap (see td rule) so wide content flows
+     into the page instead of scrolling inside a bound box. */
+  white-space: nowrap;
+}
+
+.data-table th,
+.data-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border-soft);
+  vertical-align: top;
+}
+
+.data-table td {
+  color: var(--text);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.data-table tr:hover td {
+  background: var(--accent-bg);
+}
+
+.data-table td span {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+}
+
+.issue-card {
+  display: grid;
+  border-left: 4px solid var(--amber);
+}
+
+.issue-card-body {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.issue-card.critical {
+  border-left-color: var(--red);
+}
+
+.issue-card.major {
+  border-left-color: var(--amber);
+}
+
+.issue-card.minor {
+  border-left-color: var(--accent);
+}
+
+.issue-card span {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 760;
+}
+
+.issue-card strong,
+.issue-card small {
+  overflow-wrap: anywhere;
+}
+
+.issue-card em {
+  color: var(--accent);
+  font-style: normal;
+  font-weight: 760;
+}
+
+.compact-list .issue-card {
+  padding: 10px;
+}
+
+/* Bounded scroll for the inspector issues list (ITEM-9): a long findings list
+   scrolls inside its own box instead of running the inspector off-screen. Same
+   recipe as .results-scroll. Scoped to the .compact-list modifier so the
+   DashboardPage .issue-list (a single blocking finding) is never capped. */
+.issue-list.compact-list {
+  max-height: min(82vh, 840px);
+  max-height: min(82dvh, 840px);
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+/* The suggested-action line of a structured issue card (ITEM-9): a quiet accent
+   tint so it reads as the "do this" line, distinct from the problem detail. */
+.issue-suggestion {
+  color: var(--accent);
+}
+
+/* Blocking finding: two readable lines instead of one run-on string.
+   The eyebrow shows severity; the headline emphasizes asset + UDMI payload
+   type; the detail line carries the point problem (point — expected/observed). */
+.issue-card.blocking-finding .issue-card-body span {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.issue-card.blocking-finding .issue-card-body strong {
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.issue-card.blocking-finding .issue-card-body small {
+  margin-top: 0;
+  color: var(--text);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.module-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.module-metrics article {
+  display: grid;
+  align-content: end;
+  gap: 6px;
+  min-height: 72px;
+  padding: 8px 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.ip-headline-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.ip-headline-metrics article {
+  display: grid;
+  align-content: start;
+  gap: 5px;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+}
+
+.ip-headline-metrics strong {
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+.ip-headline-metrics span,
+.ip-headline-metrics small {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.comparison-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  color: var(--text);
+  font-size: 13px;
+}
+
+.run-comparison-panel {
+  margin-top: 16px;
+}
+
+@media (max-width: 900px) {
+  .ip-headline-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.section-copy {
+  margin: 10px 0 14px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* A single descriptive section status pill (replaces the old label+value pair
+   that rendered the same status twice). Wraps so long fault strings stay
+   readable instead of being clipped to a fixed-width chip. */
+.section-status-pill {
+  display: inline-flex;
+  align-items: center;
+  max-width: 100%;
+  padding: 5px 11px;
+  border-radius: 980px;
+  background: var(--green-bg);
+  color: var(--green);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.section-status-pill.amber {
+  background: var(--amber-bg);
+  color: var(--amber);
+}
+
+.section-status-pill.red {
+  background: var(--red-bg);
+  color: var(--red);
+}
+
+/* Collapsible section header: the whole heading row is a button so the section
+   can be toggled by keyboard and pointer alike. It keeps the flex layout of the
+   old .section-heading (title block left, status pill right). */
+.section-toggle {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  margin: 0 0 12px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+}
+
+.section-toggle:hover {
+  background: transparent;
+}
+
+.section-toggle-title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+
+.section-toggle-caret {
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-size: 11px;
+  transition: transform 150ms ease;
+}
+
+.section-toggle[aria-expanded="false"] .section-toggle-caret {
+  transform: rotate(-90deg);
+}
+
+.config-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Inline helper text under an action or input — explains what a control does
+   without competing with the primary copy. */
+.field-note,
+.action-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.action-note {
+  margin-top: 2px;
+}
+
+/* A read-only status field whose value crosses an expiry/validity threshold.
+   Used for the certificate-expiry indicator: red border + red text when the
+   stored expiry date is in the past. */
+.field-expired input,
+input.field-expired {
+  border-color: var(--red);
+  color: var(--red);
+  box-shadow: 0 0 0 1px var(--red);
+}
+
+.password-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.password-field input {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.password-field .secondary-button {
+  flex: 0 0 auto;
+  width: auto;
+}
+
+/* Non-revealing indicator shown in place of the Show/Hide toggle when a
+   password field holds a stored (write-only) secret — it can never be shown. */
+.secret-stored-note {
+  flex: 0 0 auto;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.secret-field {
+  grid-column: 1 / -1;
+}
+
+.field-control {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  color: var(--text);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.secret-field textarea {
+  min-height: 104px;
+  resize: vertical;
+}
+
+.inline-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.inline-actions input[type="file"] {
+  max-width: 260px;
+  padding: 8px;
+}
+
+.publish-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.port-editor,
+.json-workbench {
+  display: grid;
+  gap: 12px;
+}
+
+.port-row {
+  display: grid;
+  grid-template-columns: minmax(110px, 1fr) minmax(120px, 160px) auto;
+  gap: 10px;
+  align-items: end;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+
+.json-workbench {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.json-workbench textarea {
+  min-height: 188px;
+  resize: vertical;
+}
+
+.publish-payload {
+  grid-column: 1 / -1;
+}
+
+.publish-payload textarea {
+  min-height: 132px;
+  resize: vertical;
+}
+
+.confirm-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 14px 0;
+  color: var(--text);
+  font-size: 13px;
+}
+
+.confirm-row input {
+  width: var(--control-check-size);
+}
+
+.action-panel {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+}
+
+.state-panel {
+  display: grid;
+  gap: 6px;
+  padding: 13px;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.state-panel strong {
+  color: var(--ink);
+}
+
+.state-panel ul {
+  margin: 4px 0 0;
+  padding-left: 18px;
+}
+
+/* A large register can reject hundreds of rows; the 50-row render cap plus this
+   scroll box keeps the setup column usable. Red styling is inherited from
+   .state-panel.error — no new colour rules. */
+.state-panel.import-errors ul {
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.state-panel.success,
+.state-panel.accepted {
+  background: var(--green-bg);
+  border-color: rgba(45, 139, 85, 0.2);
+}
+
+.state-panel.warning,
+.state-panel.partial {
+  background: var(--amber-bg);
+  border-color: rgba(184, 134, 42, 0.22);
+}
+
+.state-panel.error,
+.state-panel.rejected {
+  background: var(--red-bg);
+  border-color: rgba(255, 59, 48, 0.18);
+}
+
+.schema-card {
+  display: grid;
+  gap: 10px;
+}
+
+.template-card {
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+
+.template-inspector {
+  display: grid;
+  gap: 12px;
+}
+
+.template-fields {
+  margin-top: 0;
+}
+
+.inline-link-button {
+  justify-self: start;
+}
+
+.tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag-cloud span {
+  display: inline-flex;
+  width: fit-content;
+  padding: 5px 8px;
+  border-radius: 980px;
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 760;
+}
+
+/* Optional (not-required) columns: muted, so operators can tell at a glance
+   they may leave the field blank (e.g. Expected hostname). */
+.tag-cloud span.optional {
+  background: transparent;
+  color: var(--text);
+  box-shadow: inset 0 0 0 1px var(--border, #d0d0d5);
+}
+
+.empty-workspace {
+  display: grid;
+  justify-content: start;
+}
+
+.evidence-summary {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+}
+
+.page-section {
+  margin-top: 12px;
+}
+
+.footer-note {
+  color: var(--text);
+}
+
+.review-feedback {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 90;
+  display: grid;
+  justify-items: end;
+  gap: 10px;
+  width: min(420px, calc(100vw - 24px));
+  pointer-events: none;
+}
+
+.review-feedback button,
+.review-feedback input,
+.review-feedback select,
+.review-feedback textarea {
+  font: inherit;
+}
+
+.review-feedback-toggle {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: var(--control-height);
+  padding: 10px 16px;
+  border: 1px solid var(--border);
+  border-radius: 980px;
+  background: var(--ink);
+  color: #ffffff;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.18);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.review-feedback-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 22px;
+  min-height: 22px;
+  padding: 0 6px;
+  border-radius: 980px;
+  background: #ffffff;
+  color: var(--ink);
+  font-size: 12px;
+}
+
+.review-feedback-panel {
+  pointer-events: auto;
+  display: grid;
+  gap: 14px;
+  width: 100%;
+  max-height: min(720px, calc(100vh - 92px));
+  overflow: auto;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.24);
+}
+
+.review-feedback-panel[hidden] {
+  display: none;
+}
+
+.review-feedback-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.review-feedback-heading h2 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 17px;
+  line-height: 1.2;
+}
+
+.review-feedback-heading p {
+  margin: 5px 0 0;
+  color: var(--text);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.review-feedback-close {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1;
+}
+
+.review-feedback-form {
+  display: grid;
+  gap: 10px;
+}
+
+.review-feedback-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.review-feedback-form textarea {
+  min-height: 88px;
+  resize: vertical;
+}
+
+.review-feedback-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.review-feedback-actions button {
+  min-height: var(--control-height);
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 980px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.review-feedback-actions .primary {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--on-accent, #ffffff);
+}
+
+.review-feedback-status {
+  min-height: 18px;
+  color: var(--green);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.review-feedback-list {
+  display: grid;
+  gap: 8px;
+}
+
+.review-feedback-empty,
+.review-feedback-item {
+  padding: 10px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+
+.review-feedback-empty {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.review-feedback-item {
+  display: grid;
+  gap: 6px;
+}
+
+.review-feedback-item strong {
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.review-feedback-item p {
+  margin: 0;
+  color: var(--text);
+  font-size: 12px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.review-feedback-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.review-feedback-remove {
+  justify-self: start;
+  min-height: 28px;
+  padding: 5px 9px;
+  border: 1px solid rgba(215, 0, 21, 0.16);
+  border-radius: 980px;
+  background: var(--red-bg);
+  color: var(--red);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+/* --- Module review additions (capture, multi-point, groups) --- */
+
+/* Multi-point MQTT config publish editor. */
+.multi-point-editor {
+  display: grid;
+  gap: 12px;
+  margin: 16px 0;
+  padding: 14px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+
+.compact-heading {
+  align-items: center;
+}
+
+.compact-heading h4 {
+  margin: 2px 0 0;
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.multi-point-editor code,
+.section-copy code {
+  font-family: "SF Mono", SFMono-Regular, Consolas, "Courier New", monospace;
+  font-size: 11px;
+}
+
+/* UDMI Schedule & Payload Evidence "Execute capture" row. */
+.execute-row {
+  align-items: flex-start;
+  margin-top: 14px;
+}
+
+.execute-note {
+  flex: 1 1 280px;
+  margin: 0;
+}
+
+/* MQTT Explorer-like capture controls. */
+.capture-controls {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.payload-cell {
+  max-width: 320px;
+  overflow-wrap: anywhere;
+  font-family: "SF Mono", SFMono-Regular, Consolas, "Courier New", monospace;
+  font-size: 11px;
+}
+
+/* Per-asset / per-payload-type grouped issue view (UDMI). */
+.asset-group-list {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 12px;
+  /* Bounded scroll (ITEM-9): a long per-asset drill-down scrolls inside its own
+     box instead of running the inspector off-screen. Same recipe as
+     .results-scroll. The nested payload-compare container keeps its own smaller
+     inner scroll, so payloads scroll inside the drill-down that scrolls here. */
+  max-height: min(82vh, 880px);
+  max-height: min(82dvh, 880px);
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+.asset-group {
+  min-width: 0;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+
+.asset-group.open {
+  border-color: color-mix(in srgb, var(--ink) 42%, transparent);
+  outline: 1px solid color-mix(in srgb, var(--ink) 42%, transparent);
+  outline-offset: -1px;
+}
+
+.asset-group-toggle {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+.asset-group-toggle:focus-visible,
+.asset-summary-toggle:focus-visible {
+  outline-offset: -3px;
+}
+
+.asset-group-toggle[aria-expanded="true"] {
+  background: var(--surface);
+}
+
+.asset-group-toggle:active,
+.asset-summary-toggle:active {
+  background: var(--surface-3);
+}
+
+.asset-group-toggle strong {
+  font-size: 13px;
+}
+
+.asset-group-toggle strong,
+.asset-group-toggle span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.asset-group-toggle span {
+  color: var(--text);
+  font-size: 11px;
+}
+
+.asset-group.open .asset-group-toggle {
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.asset-group-detail {
+  display: grid;
+  gap: 8px;
+  padding: 8px;
+}
+
+.payload-type-group {
+  display: grid;
+  gap: 8px;
+}
+
+.payload-type-group:focus-visible {
+  border-radius: var(--radius-sm);
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.payload-type-group h5 {
+  margin: 0;
+  color: var(--accent);
+  font-family: "SF Mono", SFMono-Regular, Consolas, "Courier New", monospace;
+  font-size: 11px;
+  font-weight: 760;
+  text-transform: uppercase;
+}
+
+.payload-type-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.payload-type-heading .secondary-button {
+  flex: 0 0 auto;
+}
+
+/* Row shading for live result rows: pass/fail for UDMI verdicts AND IP
+   discovery register verdicts; warn is the inconclusive amber (expected-but-
+   silent host, unexpected/hostname-mismatch findings), shared with the UDMI RAG
+   amber work. Subtle tints via the --green-bg / --amber-bg / --red-bg tokens so
+   the [data-theme="dark"] overrides in electracom-theme.css apply automatically;
+   declared after the tr:hover rule so the verdict colour stays put under the
+   pointer. NOTE: the separate v0.1.13 "UDMI RAG third state (amber)" item needs
+   the identical .row-warn rule — whichever lands first adds it, the other
+   reuses. */
+.data-table tr.row-pass td {
+  background: var(--green-bg);
+}
+
+.data-table tr.row-fail td {
+  background: var(--red-bg);
+}
+
+.data-table tr.row-warn td {
+  background: var(--amber-bg);
+}
+
+/* Evidence selection is an explicit keyboard control in each row. The selected
+   row outline is token-backed and overlays any pass/fail/warn tint. */
+.data-table tbody tr.row-selected td {
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.result-row-selectable {
+  cursor: pointer;
+}
+
+.result-asset-button {
+  display: inline-flex;
+  min-width: 0;
+  max-width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+
+.result-asset-button:focus-visible {
+  border-radius: 3px;
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.result-asset-button:active {
+  color: var(--accent);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .result-asset-button:hover {
+    color: var(--accent-hover);
+  }
+}
+
+.result-row-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.result-row-actions .compact {
+  min-height: var(--control-height);
+}
+
+/* Per-asset summary row for the grouped UDMI results table (ITEM-7): a full-width
+   clickable header that expands to the asset's per-payload-type rows. Reuses the
+   --green-bg/--amber-bg/--red-bg row tints via .row-pass/.row-warn/.row-fail. */
+.asset-summary-row td {
+  padding: 0;
+}
+
+.asset-summary-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: var(--control-height);
+  padding: 9px 12px;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+}
+
+.asset-summary-caret {
+  display: inline-grid;
+  flex: 0 0 1em;
+  place-items: center;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1;
+}
+
+.asset-summary-toggle strong {
+  font-size: 12px;
+}
+
+.asset-summary-toggle span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.asset-summary-toggle[aria-expanded="true"] {
+  background: var(--accent-bg);
+}
+
+/* MQTT live topic tree: a brief tint when a topic sees traffic. Decorative only;
+   the msg/s column already conveys liveness, so reduced-motion drops it. */
+.mqtt-tree-flash {
+  animation: mqtt-tree-flash 0.7s ease-out;
+}
+
+@keyframes mqtt-tree-flash {
+  from {
+    background: var(--green-bg);
+  }
+  to {
+    background: transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mqtt-tree-flash {
+    animation: none;
+  }
+}
+
+.mqtt-config-payload {
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: monospace;
+}
+
+.asset-summary-toggle[aria-expanded="true"] .asset-summary-caret,
+.asset-summary-toggle[aria-expanded="true"] strong {
+  color: var(--accent-hover);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .asset-group-toggle:hover,
+  .asset-summary-toggle:hover {
+    background: var(--accent-bg);
+  }
+
+  .asset-group-toggle:hover strong,
+  .asset-summary-toggle:hover strong {
+    color: var(--accent-hover);
+  }
+}
+
+/* Matching tone for the per-asset payload sections (state/metadata/pointset),
+   so scrolling the groups draws the eye to the RAG verdict without re-reading
+   the table: green = compliant, amber (warn) = publishing-but-non-compliant,
+   red = offline / not publishing. --amber-bg / --red-bg carry the dark-theme
+   overrides via electracom-theme.css automatically. */
+.payload-type-group.section-pass,
+.payload-type-group.section-warn,
+.payload-type-group.section-fail {
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+}
+
+.payload-type-group.section-pass {
+  background: var(--green-bg);
+}
+
+.payload-type-group.section-warn {
+  background: var(--amber-bg);
+}
+
+.payload-type-group.section-fail {
+  background: var(--red-bg);
+}
+
+/* The short RAG verdict line under each payload-type heading (PASS / PASS WITH
+   NOTES / NON-COMPLIANT / OFFLINE). */
+.payload-verdict {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 760;
+  letter-spacing: 0.04em;
+}
+
+.payload-verdict.pass {
+  color: var(--green);
+}
+
+.payload-verdict.warn {
+  color: var(--amber);
+}
+
+.payload-verdict.fail {
+  color: var(--red);
+}
+
+.payload-verdict.neutral {
+  color: var(--muted);
+}
+
+/* Expected-vs-observed payload panels sit side by side wherever there's room
+   (~560px+), collapsing to stacked on narrow widths with no media query
+   (ISSUE-8). min-width:0 lets the <pre> children shrink and scroll instead of
+   forcing the grid wide. */
+.payload-compare {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+.payload-compare > div {
+  min-width: 0;
+}
+
+/* The 320px cap that keeps table payload cells compact would cramp these full
+   panels; lift it here and let long lines scroll inside the panel instead. */
+.payload-compare .payload-cell {
+  max-width: none;
+  overflow-x: auto;
+}
+
+/* Per-line presence-diff highlight for the payload panels: a key present on
+   only one side is tinted. Amber on the expected side (registered but no
+   observed counterpart), red on the observed side (received but absent from the
+   expected template). --amber-bg / --red-bg carry the dark-theme overrides
+   automatically. */
+.payload-diff-line {
+  display: block;
+  white-space: pre;
+}
+
+.payload-diff-line.only-expected {
+  background: var(--amber-bg);
+}
+
+.payload-diff-line.only-observed {
+  background: var(--red-bg);
+}
+
+.payload-diff-legend {
+  margin-top: 4px;
+}
+
+.payload-template-context {
+  max-width: none;
+  margin: 4px 0 10px;
+  padding: 9px 11px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-3);
+  color: var(--text);
+}
+
+/* Aligned expected/observed compare (ITEM-8): ONE scroll container holds a
+   two-column grid so both panels scroll together (synchronised) on BOTH axes,
+   and a massive payload scrolls inside the box instead of taking over the
+   inspector. Nests inside the .asset-group-list outer scroll (ITEM-9). */
+.payload-compare-aligned {
+  max-height: min(60vh, 560px);
+  overflow: auto;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+
+.payload-compare-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(280px, max-content));
+  font-family: "SF Mono", SFMono-Regular, Consolas, "Courier New", monospace;
+  font-size: 11px;
+}
+
+/* Sticky column headers so the panel labels stay visible while the body scrolls
+   (same sticky-th pattern as the results table). */
+.payload-compare-head {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border-soft);
+  background: var(--surface-3);
+  color: var(--muted);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 760;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+/* Each cell is one JSON line; white-space:pre keeps indentation, and long lines
+   pan together on the shared horizontal scroll rather than wrapping. */
+.payload-compare-grid .payload-diff-line {
+  padding: 0 10px;
+  white-space: pre;
+}
+
+/* Engine-flagged point row: red across BOTH cells with a red edge bar, so the
+   mismatching point reads at a glance. Distinct from the per-cell presence tints
+   (only-expected amber / only-observed red) above. */
+.payload-diff-line.flagged {
+  background: var(--red-bg);
+  box-shadow: inset 2px 0 0 var(--red);
+}
+
+/* Notepad++-adjacent JSON syntax colouring (ITEM-8), mapped onto the existing
+   warm palette tokens so light and dark both follow automatically. */
+.json-key {
+  color: var(--accent);
+}
+
+.json-string {
+  color: var(--green);
+}
+
+.json-number {
+  color: var(--amber);
+}
+
+.json-literal {
+  color: var(--purple);
+}
+
+.json-punct {
+  color: var(--muted);
+}
+
+/* Inline report-linking confirmation in the run monitor. */
+/* Report format lives inline with the run-monitor actions (field ask
+   2026-07-14: PDF/Word handover exports). */
+.report-format-picker {
+  align-items: center;
+  display: inline-flex;
+  font-size: 0.85rem;
+  gap: 0.4rem;
+}
+
+.report-from-run-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.report-from-run-controls select,
+.report-from-run-controls .primary-button,
+.report-from-run-controls .secondary-button {
+  min-height: var(--control-height);
+}
+
+/* UDMI run summary. Metric families stay visually grouped so the page can
+   carry the full evidence set without presenting one undifferentiated wall of
+   numbers. System completion remains tabular because the rows are comparative. */
+.udmi-summary-shell {
+  display: grid;
+  gap: 12px;
+}
+
+.udmi-summary {
+  display: grid;
+  gap: 16px;
+}
+
+.udmi-summary-heading {
+  margin-bottom: 0;
+}
+
+.udmi-summary-run-meta {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(150px, 1fr));
+  gap: 16px;
+  margin: 0;
+}
+
+.udmi-summary-run-meta div {
+  display: grid;
+  gap: 4px;
+}
+
+.udmi-summary-run-meta dt,
+.udmi-summary-run-meta dd {
+  margin: 0;
+}
+
+.udmi-summary-run-meta dt {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.udmi-summary-run-meta dd {
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 760;
+  font-variant-numeric: tabular-nums;
+}
+
+.udmi-metric-groups {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.udmi-metric-group {
+  --metric-rule: var(--border-soft);
+  --metric-surface: var(--surface);
+
+  container-type: inline-size;
+  display: grid;
+  align-content: start;
+  min-width: 0;
+  min-height: 100%;
+  padding: 16px;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  text-align: center;
+}
+
+.udmi-metric-assets {
+  --metric-rule: color-mix(in srgb, var(--green) 28%, transparent);
+  --metric-surface: var(--green-bg);
+
+  border-color: var(--metric-rule);
+  background: var(--metric-surface);
+}
+
+.udmi-metric-payloads {
+  --metric-rule: color-mix(in srgb, var(--accent) 26%, transparent);
+  --metric-surface: var(--accent-bg);
+
+  border-color: var(--metric-rule);
+  background: var(--metric-surface);
+}
+
+.udmi-metric-faults {
+  --metric-rule: color-mix(in srgb, var(--amber) 30%, transparent);
+  --metric-surface: var(--amber-bg);
+
+  border-color: var(--metric-rule);
+  background: var(--metric-surface);
+}
+
+.udmi-metric-group h4,
+.udmi-system-summary h4 {
+  margin: 0 0 10px;
+  color: var(--ink);
+  font-size: 14px;
+  text-align: center;
+}
+
+.udmi-metric-group dl {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  margin: 0;
+  border: 1px solid var(--metric-rule);
+  background: transparent;
+}
+
+.udmi-metric-group dl div {
+  display: grid;
+  align-content: center;
+  gap: 4px;
+  justify-items: center;
+  min-width: 0;
+  min-height: 72px;
+  padding: 12px 8px;
+  border-block-start: 1px solid var(--metric-rule);
+  background: transparent;
+}
+
+.udmi-metric-group dl div:first-child {
+  border-block-start: 0;
+}
+
+.udmi-metric-group dt,
+.udmi-metric-group dd {
+  margin: 0;
+}
+
+.udmi-metric-group dt {
+  color: var(--text);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.udmi-metric-group dd {
+  color: var(--ink);
+  font-size: 22px;
+  font-weight: 780;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.udmi-metric-group .udmi-payload-rates {
+  margin-top: 12px;
+}
+
+.udmi-payload-rates small {
+  display: block;
+  margin-top: 6px;
+  color: var(--text);
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.35;
+}
+
+.udmi-metric-basis {
+  margin: 8px 0 0;
+  color: var(--text);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.udmi-metric-group .udmi-metric-basis {
+  justify-self: center;
+  max-width: 75ch;
+  padding-top: 12px;
+  border-top: 1px solid var(--metric-rule);
+  text-align: center;
+}
+
+@container (min-width: 16rem) {
+  .udmi-metric-group .udmi-metric-table,
+  .udmi-metric-group .udmi-payload-rates {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .udmi-metric-group dl div:nth-child(n) {
+    border-block-start: 1px solid var(--metric-rule);
+    border-inline-start: 1px solid var(--metric-rule);
+  }
+
+  .udmi-metric-group dl div:nth-child(2n + 1) {
+    border-inline-start: 0;
+  }
+
+  .udmi-metric-group dl div:nth-child(-n + 2) {
+    border-block-start: 0;
+  }
+}
+
+@container (min-width: 32rem) {
+  .udmi-metric-group .udmi-metric-table {
+    position: relative;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-rows: minmax(72px, 1fr);
+  }
+
+  .udmi-metric-group .udmi-metric-table div:nth-child(n) {
+    border-block-start: 0;
+    border-inline-start: 0;
+  }
+
+  .udmi-metric-group .udmi-metric-table::after {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, transparent calc(100% - 1px), var(--metric-rule) calc(100% - 1px)),
+      linear-gradient(to bottom, transparent calc(100% - 1px), var(--metric-rule) calc(100% - 1px));
+    background-repeat: repeat-x, repeat-y;
+    background-size:
+      25% 100%,
+      100% 50%;
+    content: "";
+    pointer-events: none;
+  }
+}
+
+.udmi-system-summary {
+  display: grid;
+  gap: 12px;
+}
+
+.udmi-result-supplementary {
+  display: grid;
+  gap: 16px;
+}
+
+.udmi-system-summary h4 {
+  margin-bottom: 4px;
+}
+
+.udmi-system-summary p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.udmi-system-summary .data-table-wrap {
+  box-shadow: none;
+}
+
+.udmi-topic-discovery-meta {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.data-table-wrap.udmi-topic-discovery-scroll {
+  max-height: min(60vh, 560px);
+  overflow: auto;
+}
+
+.data-table-wrap.udmi-wrong-topic-scroll {
+  max-height: min(60vh, 560px);
+  overflow: auto;
+}
+
+.udmi-topic-discovery-scroll .data-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.udmi-wrong-topic-scroll .data-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.topic-discovery-controls {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0 0;
+  padding: 0;
+  border: 0;
+}
+
+.topic-discovery-controls legend {
+  padding: 0;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.topic-discovery-options {
+  display: grid;
+  gap: 8px;
+  margin-left: 24px;
+}
+
+.topic-discovery-options .section-copy {
+  margin: 0;
+}
+
+/* Native modal for the report title. The solid surface avoids fragile glass
+   effects while keeping the browser's focus containment and Escape behaviour. */
+.report-title-dialog {
+  width: min(520px, calc(100vw - 32px));
+  max-height: calc(100vh - 48px);
+  padding: 0;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.report-title-dialog::backdrop {
+  background: var(--scrim);
+}
+
+.report-title-dialog form {
+  display: grid;
+  gap: 12px;
+  padding: 24px;
+}
+
+.report-scope-summary {
+  margin: 0;
+  padding: 11px 13px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-bg);
+  color: var(--text);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.report-name-cell {
+  display: grid;
+  gap: 3px;
+  min-width: 170px;
+}
+
+.report-name-cell strong {
+  color: var(--ink);
+}
+
+.report-name-cell small {
+  color: var(--text);
+}
+
+.issue-card .issue-mismatch {
+  color: var(--red);
+  font-style: normal;
+  font-weight: 760;
+}
+
+.run-history-evidence {
+  display: grid;
+  gap: 4px;
+  justify-items: start;
+}
+
+.run-history-evidence small {
+  color: var(--text);
+  font-size: 11px;
+}
+
+.report-title-dialog-heading {
+  display: grid;
+  gap: 6px;
+}
+
+.report-title-dialog-heading h3,
+.report-title-dialog-heading p {
+  margin: 0;
+}
+
+.report-title-dialog-heading p {
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.report-title-dialog label {
+  display: grid;
+  gap: 6px;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.report-title-dialog input {
+  width: 100%;
+}
+
+.report-title-dialog small {
+  color: var(--muted);
+  text-align: right;
+}
+
+.report-title-dialog-actions {
+  justify-content: flex-end;
+}
+
+.report-title-dialog-actions .compact {
+  min-height: var(--control-height);
+}
+
+.run-monitor-note {
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 650;
+}
+
+@media (max-width: 980px) {
+  .app-brand-bar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .home-overview,
+  .home-brief,
+  .brief-route,
+  .hero,
+  .module-hero,
+  .two-col,
+  .config-grid,
+  .field-grid,
+  .publish-grid,
+  .port-row,
+  .json-workbench,
+  .metric-grid,
+  .mode-grid,
+  .kpi-strip,
+  .summary-grid,
+  .udmi-metric-groups {
+    grid-template-columns: 1fr;
+  }
+
+  .review-feedback {
+    position: static;
+    right: auto;
+    bottom: auto;
+    width: auto;
+    margin: 0 10px calc(10px + env(safe-area-inset-bottom));
+  }
+}
+
+@media (min-width: 1080px) {
+  .module-hero {
+    scroll-margin-top: 132px;
+  }
+}
+
+@media (max-width: 720px) {
+  .live-console-heading,
+  .live-console-grid {
+    flex-direction: column;
+  }
+
+  .live-console-topic-statuses {
+    grid-template-columns: 1fr;
+  }
+
+  body {
+    font-size: 12px;
+  }
+
+  .app-header {
+    position: static;
+  }
+
+  .app-brand-bar {
+    padding: 12px 14px 10px;
+  }
+
+  .app-brand {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .app-tabs {
+    padding: 0 14px;
+  }
+
+  .app-tab {
+    min-height: 40px;
+    padding: 9px 12px;
+  }
+
+  .page-titlebar {
+    padding: 20px 14px 0;
+  }
+
+  .page-titlebar h1 {
+    font-size: 26px;
+  }
+
+  .page-titlebar p {
+    font-size: 13px;
+  }
+
+  .page-frame {
+    padding: 18px 14px 36px;
+  }
+
+  .home-overview,
+  .home-brief {
+    padding: 20px;
+  }
+
+  .module-hero {
+    padding: 0 0 20px;
+    scroll-margin-top: 16px;
+  }
+
+  .surface-heading,
+  .section-heading,
+  .readiness-row,
+  .workflow-stage,
+  .run-card,
+  .run-monitor-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .udmi-summary-run-meta {
+    grid-template-columns: 1fr;
+  }
+
+  .section-heading label,
+  .progress-block {
+    justify-items: start;
+    width: 100%;
+  }
+
+  .report-from-run-controls,
+  .report-format-picker {
+    width: 100%;
+  }
+
+  .report-format-picker select {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .primary-button,
+  .secondary-button {
+    width: 100%;
+  }
+
+  .password-field .secondary-button,
+  .session-key-form .secondary-button {
+    width: auto;
+  }
+
+  .session-key-form {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .port-row {
+    padding: 10px;
+  }
+
+  .review-feedback {
+    position: static;
+    right: auto;
+    bottom: auto;
+    width: auto;
+    margin: 0 10px calc(10px + env(safe-area-inset-bottom));
+  }
+
+  .review-feedback-panel {
+    max-height: calc(100vh - 76px);
+  }
+
+  .review-feedback-row {
+    grid-template-columns: 1fr;
+  }
+
+  .review-feedback-actions button {
+    flex: 1 1 100%;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Phase 4b: session badge, role chips, hub multi-project view, user admin.
+   --------------------------------------------------------------------------- */
+
+.session-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 30px;
+  padding: 4px 10px 4px 12px;
+  border: 1px solid var(--border);
+  border-radius: 980px;
+  background: var(--surface);
+}
+
+.session-badge-id {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 650;
+  color: var(--ink);
+}
+
+.role-chip {
+  font-style: normal;
+  font-size: 10px;
+  font-weight: 760;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  padding: 2px 7px;
+  border-radius: 980px;
+  background: var(--surface-2);
+  color: var(--muted);
+}
+
+.role-chip.role-admin {
+  background: var(--purple-bg);
+  color: var(--purple);
+}
+
+.role-chip.role-engineer {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.role-chip.role-reviewer {
+  background: var(--amber-bg);
+  color: var(--amber);
+}
+
+.role-chip.role-viewer {
+  background: var(--green-bg);
+  color: var(--green);
+}
+
+.link-button {
+  border: none;
+  background: none;
+  padding: 0;
+  font-size: 11px;
+  font-weight: 650;
+  color: var(--accent);
+  cursor: pointer;
+}
+
+.link-button:hover {
+  text-decoration: underline;
+}
+
+.session-key-form {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.session-key-form input {
+  flex: 1 1 160px;
+  width: auto;
+  min-width: 160px;
+  min-height: var(--control-height-compact);
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: 980px;
+  font-size: 12px;
+}
+
+/* Hub multi-project view */
+.hub-filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.hub-filter-grid label {
+  display: grid;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 650;
+  color: var(--muted);
+}
+
+.hub-filter-grid input,
+.hub-filter-grid select {
+  min-height: var(--control-height);
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 12px;
+}
+
+.hub-filter-grid select {
+  padding-right: 32px;
+}
+
+.hub-filter-action {
+  display: flex;
+  align-items: flex-end;
+}
+
+.edge-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 980px;
+  background: var(--purple-bg);
+  color: var(--purple);
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.edge-local {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.issued-key {
+  display: block;
+  margin: 8px 0;
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--code);
+  color: #f5f5f7;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  word-break: break-all;
+}
+
+@media (max-width: 720px) {
+  .module-hero-workbench {
+    padding: 18px;
+  }
+}
+
+@media (max-width: 420px) {
+  .module-hero-workbench .module-metrics {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SAM Design System — Electracom Console</title>
+<style>
+  :root{
+    --bg:#faf7f2; --surface:#fff; --surface-2:#fdf9f3; --surface-3:#eeebe5;
+    --border:#e5dfd6; --border-soft:#eeebe5; --ink:#2c2a28; --text:#6b6560; --muted:#6f6963;
+    --accent:#26718f; --accent-hover:#226986; --accent-bg:#e4f2f7; --on-accent:#fff;
+    --green:#216f42; --green-bg:#e8f5ee; --amber:#865d0b; --amber-bg:#faf1df;
+    --red:#c0392b; --red-bg:#fbeae7; --purple:#8b5c9b; --purple-bg:#f1e9f5;
+    --radius:10px; --radius-sm:8px; --shadow:0 1px 2px rgba(44,42,40,.05);
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif;
+    --mono:"SF Mono",SFMono-Regular,Consolas,"Courier New",monospace;
+    --logo-filter:none;
+  }
+  html[data-theme="dark"]{
+    --bg:#1a1d24; --surface:#232730; --surface-2:#2b2f3a; --surface-3:#373c47;
+    --border:#373c47; --border-soft:#2d313b; --ink:#e8e6e0; --text:#b8b2aa; --muted:#ada79f;
+    --accent:#58a6c8; --accent-hover:#7bbcd8; --accent-bg:rgba(42,123,155,.18); --on-accent:#17232a;
+    --green:#5fc98a; --green-bg:rgba(45,139,85,.18); --amber:#e0b15a; --amber-bg:rgba(184,134,42,.18);
+    --red:#e8786b; --red-bg:rgba(192,57,43,.2); --purple:#b58fc8; --purple-bg:rgba(139,92,155,.2);
+    --shadow:0 1px 4px rgba(0,0,0,.3); --logo-filter:brightness(1.7) contrast(1.05);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:13px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1180px;margin:0 auto;padding:24px 24px 80px}
+  header.top{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--surface) 82%,transparent);backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--border)}
+  .brand-bar{max-width:1180px;margin:0 auto;padding:11px 24px 9px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .logo-mark{display:flex;align-items:end;gap:1px;filter:var(--logo-filter)}
+  .logo-mark b{font-size:15px;font-weight:800;letter-spacing:.02em;color:var(--ink)}
+  .logo-bars{display:flex;height:8px;width:96px;border-radius:2px;overflow:hidden;margin-bottom:3px}
+  .logo-bars i{flex:1}
+  .divider{width:1px;height:24px;background:var(--border)}
+  .brand-title{font-size:18px;font-weight:760}
+  .brand-kind{color:var(--muted);font-size:10px;font-weight:650;text-transform:uppercase;display:block;margin-top:-2px}
+  .pill{display:inline-flex;align-items:center;gap:6px;min-height:30px;padding:6px 13px;border:1px solid var(--border);border-radius:980px;background:var(--surface);color:var(--text);font-size:11px;font-weight:650;cursor:pointer;white-space:nowrap}
+  .pill.subtle{background:var(--accent-bg);border-color:transparent;color:var(--accent)}
+  h1.page{font-size:32px;line-height:1.15;margin:22px 0 4px}
+  p.sub{color:var(--text);font-size:15px;line-height:1.55;max-width:680px;margin:0 0 8px}
+  .eyebrow{font-family:var(--mono);font-size:11px;font-weight:760;letter-spacing:.04em;text-transform:uppercase;color:var(--accent)}
+  section.block{margin-top:34px}
+  section.block>h2{font-size:20px;margin:0 0 14px;padding-bottom:8px;border-bottom:1px solid var(--border-soft)}
+  .surface{background:var(--surface);border:1px solid var(--border-soft);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px}
+  .surface-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}
+  .surface-heading h3{margin:3px 0 0;font-size:16px;color:var(--ink)}
+  .grid{display:grid;gap:14px}
+  .g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  /* swatches */
+  .swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+  .sw{border:1px solid var(--border-soft);border-radius:var(--radius-sm);overflow:hidden;background:var(--surface)}
+  .sw .chip-color{height:52px}
+  .sw .meta{padding:7px 9px}
+  .sw .meta b{display:block;font-size:11px}
+  .sw .meta code{font-size:10px;color:var(--muted);font-family:var(--mono)}
+  /* type scale */
+  .type-row{padding:9px 0;border-bottom:1px solid var(--border-soft)}
+  .type-row small{display:block;color:var(--muted);font-family:var(--mono);font-size:10px;margin-bottom:2px}
+  /* buttons */
+  .btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 15px;border-radius:var(--radius-sm);font-size:12px;font-weight:700;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+  .btn.primary:hover{background:var(--accent-hover);border-color:var(--accent-hover)}
+  .btn:hover{border-color:var(--accent-hover);background:var(--accent-bg);color:var(--accent-hover)}
+  .btn.primary:hover{color:var(--on-accent)}
+  .btn.destructive{color:var(--red)}
+  .btn.destructive:hover{border-color:var(--red);background:var(--red-bg);color:var(--red)}
+  .btn:disabled{background:var(--surface-3);border-color:var(--border);color:var(--muted);cursor:not-allowed}
+  .btn.compact{min-height:36px}
+  .linkbtn{border:none;background:none;padding:0;color:var(--accent);font-size:11px;font-weight:650;cursor:pointer}
+  /* chips + status */
+  .chip{display:inline-flex;align-items:center;padding:5px 9px;border-radius:980px;background:var(--green-bg);color:var(--green);font-size:11px;font-weight:650}
+  .chip.amber{background:var(--amber-bg);color:var(--amber)}
+  .chip.accent{background:var(--accent-bg);color:var(--accent)}
+  .status{display:inline-flex;align-items:center;padding:4px 8px;border-radius:980px;font-size:10px;font-weight:760;text-transform:uppercase}
+  .status.ready{background:var(--green-bg);color:var(--green)}
+  .status.running{background:var(--accent-bg);color:var(--accent)}
+  .status.queued{background:var(--amber-bg);color:var(--amber)}
+  .status.failed{background:var(--red-bg);color:var(--red)}
+  /* kpi */
+  .kpi{background:var(--surface);border:1px solid var(--border-soft);border-top:3px solid var(--accent);border-radius:var(--radius);padding:15px}
+  .kpi .lbl{font-size:10px;font-weight:760;text-transform:uppercase;color:var(--muted)}
+  .kpi .val{font-size:24px;font-weight:700;color:var(--ink);line-height:1;margin-top:8px}
+  .kpi .sub{color:var(--muted);margin-top:4px}
+  .kpi.danger{border-top-color:var(--red)}
+  .kpi.danger .val{color:var(--red)}
+  /* inputs */
+  label.field{display:block}
+  label.field>span{display:block;font-size:12px;font-weight:700;color:var(--ink);margin-bottom:6px}
+  .control{width:100%;min-height:44px;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);color:var(--ink);font:inherit}
+  .control:focus{outline:none;border-color:var(--accent)}
+  .note{color:var(--muted);font-size:12px;margin-top:6px}
+  /* table */
+  .tablewrap{border:1px solid var(--border);border-radius:var(--radius);overflow-x:auto;background:var(--surface);box-shadow:var(--shadow)}
+  table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+  th{background:var(--surface-2);color:var(--muted);font-size:10px;font-weight:760;text-transform:uppercase;text-align:left;padding:9px 12px;white-space:nowrap}
+  td{padding:10px 12px;border-bottom:1px solid var(--border-soft);color:var(--text);font-size:12px}
+  tbody tr:hover td{background:var(--accent-bg)}
+  td.bad{background:var(--red-bg)}
+  td.warn{background:var(--amber-bg)}
+  td b{color:var(--ink)}
+  td .muted2{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+  /* issue card */
+  .issue{background:var(--surface);border:1px solid var(--border-soft);border-left:4px solid var(--amber);border-radius:var(--radius);padding:13px 15px;display:flex;justify-content:space-between;gap:12px;align-items:center}
+  .issue.critical{border-left-color:var(--red)}
+  .issue .sev{font-size:10px;text-transform:uppercase;font-weight:760;color:var(--muted)}
+  .issue h4{margin:3px 0;font-size:13px;color:var(--ink)}
+  .issue p{margin:0;color:var(--text)}
+  /* stepper */
+  .stepper{display:inline-flex;align-items:center;gap:4px;padding:5px;border:1px solid var(--border);border-radius:980px;background:var(--surface)}
+  .step{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:980px;color:var(--muted);font-size:12px;font-weight:650}
+  .step.on{background:var(--accent-bg);color:var(--accent)}
+  .step .dot{width:18px;height:18px;border-radius:50%;display:inline-grid;place-items:center;background:var(--surface-3);color:var(--muted);font-size:11px}
+  .step.on .dot{background:var(--accent);color:var(--on-accent)}
+  .step.done .dot{background:var(--green);color:#fff}
+  /* tabs preview */
+  .tabs{display:flex;gap:6px;border-bottom:1px solid var(--border);padding:0 4px}
+  .tabgroup{display:flex;flex-direction:column;padding:6px 10px 0}
+  .tabgroup small{font-size:9px;font-weight:760;text-transform:uppercase;color:var(--muted);letter-spacing:.04em;padding-left:6px}
+  .tabgroup .row{display:flex}
+  .tab{padding:10px 16px;min-height:42px;display:flex;align-items:center;color:var(--text);font-size:13px;font-weight:600;border-bottom:3px solid transparent;border-radius:8px 8px 0 0;cursor:pointer}
+  .tab.active{color:var(--accent);border-bottom-color:var(--accent);background:var(--surface)}
+  .row-inline{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand-bar">
+    <div class="brand">
+      <div class="logo-mark">
+        <b>ELECTRACOM</b>
+        <span class="logo-bars"><i style="background:#0a8ed9"></i><i style="background:#f0a021"></i><i style="background:#37b34a"></i><i style="background:#b0348c"></i><i style="background:#e23b3b"></i></span>
+      </div>
+      <span class="divider"></span>
+      <div><span class="brand-title">Smart Asset Management Tool</span><span class="brand-kind">Asset workspace · Design system</span></div>
+    </div>
+    <div class="row-inline">
+      <span class="pill subtle">v0.1</span>
+      <button class="pill" id="themeBtn" onclick="tg()">Use dark theme</button>
+      <span class="pill subtle">171 Victoria Street</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <span class="eyebrow">Design system</span>
+  <h1 class="page">Electracom Console — SAM</h1>
+  <p class="sub">The Smart Commissioning Tool's design language, extracted from its shipped v0.1.51 code and applied to the Smart Asset Management Tool. Toggle the theme (top right) to check both palettes. Every token here matches <code>docs/DESIGN.md</code>.</p>
+
+  <section class="block">
+    <h2>Colours</h2>
+    <div class="swatches" id="sw"></div>
+  </section>
+
+  <section class="block">
+    <h2>Typography</h2>
+    <div class="surface">
+      <div class="type-row"><small>page-title · 32 / 700</small><div style="font-size:32px;font-weight:700;line-height:1.15">Asset register overview</div></div>
+      <div class="type-row"><small>hero-h2 · 28 / 700</small><div style="font-size:28px;font-weight:700">Commissioning console</div></div>
+      <div class="type-row"><small>section-h3 · 16 / 700</small><div style="font-size:16px;font-weight:700">Trade register progress</div></div>
+      <div class="type-row"><small>eyebrow · 11 mono uppercase / accent</small><div class="eyebrow">Detected template parameters</div></div>
+      <div class="type-row"><small>body · 13 / 400</small><div style="font-size:13px">Every displayed fault is traceable to the exact asset and cell, with the expected rule shown to the engineer.</div></div>
+      <div class="type-row"><small>table-header · 10 uppercase / muted</small><div style="font-size:10px;font-weight:760;text-transform:uppercase;color:var(--muted)">Instance Name</div></div>
+      <div class="type-row"><small>kpi-value · 24 / 700 · tabular</small><div style="font-size:24px;font-weight:700;font-variant-numeric:tabular-nums">4,286</div></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2>Buttons</h2>
+    <div class="surface row-inline">
+      <button class="btn primary">Save Configuration</button>
+      <button class="btn">Validate</button>
+      <button class="btn compact">Export CSV</button>
+      <button class="btn destructive">Delete Selected</button>
+      <button class="btn" disabled>Upload and validate</button>
+      <button class="linkbtn">View full register →</button>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2>Chips &amp; status tokens</h2>
+    <div class="surface">
+      <div class="row-inline" style="margin-bottom:14px">
+        <span class="chip">Required</span>
+        <span class="chip amber">Conditional</span>
+        <span class="chip accent">Dropdown</span>
+        <span class="chip accent">35 parameters detected</span>
+      </div>
+      <div class="row-inline">
+        <span class="status ready">Valid</span>
+        <span class="status running">In progress</span>
+        <span class="status queued">Partial</span>
+        <span class="status failed">Error</span>
+      </div>
+      <p class="note">Status is always text + colour, never colour alone.</p>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2>KPI cards</h2>
+    <div class="grid g4">
+      <div class="kpi"><div class="lbl">Total assets</div><div class="val">4,286</div><div class="sub">Across 7 active trades</div></div>
+      <div class="kpi"><div class="lbl">Metadata completeness</div><div class="val" style="color:var(--green)">87.4%</div><div class="sub">Applicable required parameters</div></div>
+      <div class="kpi danger"><div class="lbl">Assets with errors</div><div class="val">164</div><div class="sub">3.8% of all assets</div></div>
+      <div class="kpi danger"><div class="lbl">Duplicate Instance Names</div><div class="val">12</div><div class="sub">Checked across every trade</div></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2>Navigation &amp; stepper</h2>
+    <div class="surface" style="padding:0 0 14px">
+      <div class="tabs">
+        <div class="tabgroup"><small>&nbsp;</small><div class="row"><div class="tab active">Home</div></div></div>
+        <div class="tabgroup"><small>Configure</small><div class="row"><div class="tab">Configuration</div></div></div>
+        <div class="tabgroup"><small>Review</small><div class="row"><div class="tab">Overview</div></div></div>
+        <div class="tabgroup"><small>Manage</small><div class="row"><div class="tab">Asset Management</div></div></div>
+      </div>
+      <div style="padding:16px 16px 0">
+        <span class="stepper"><span class="step done"><span class="dot">✓</span>Setup</span><span class="step on"><span class="dot">2</span>Import</span><span class="step"><span class="dot">3</span>Validate</span></span>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2>Surface + form</h2>
+    <div class="surface">
+      <div class="surface-heading"><div><span class="eyebrow">Project setup</span><h3>Asset naming convention</h3></div><button class="linkbtn">Reset mapping</button></div>
+      <div class="grid g2">
+        <label class="field"><span>Asset Naming Standard</span><select class="control"><option>BDNS-aligned project convention</option><option>Custom project convention</option><option>Imported naming specification</option></select></label>
+        <label class="field"><span>Instance Name Creation Mode</span><select class="control"><option>Auto-generate</option><option>Import / Manual</option></select></label>
+      </div>
+      <p class="note">Names generate when all required naming components are valid; imported/manual names stay editable but are still checked for uniqueness and format.</p>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2>Data grid (validation on the cell)</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th></th><th>Instance Name</th><th>Level</th><th>Space ID</th><th>BDNS Equipment Type</th><th>QR Required</th><th>QR Size</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td><input type="checkbox"></td><td><b>AHU-1004001</b><span class="muted2">L04 Tenant AHU</span></td><td>L04</td><td>04.13</td><td>air handling unit</td><td>Yes</td><td>Medium</td><td><span class="status ready">Valid</span></td></tr>
+          <tr><td><input type="checkbox"></td><td><b>FCU-1041007</b><span class="muted2">Tenant FCU 04-027</span></td><td>L04</td><td>04.27</td><td>fan coil unit</td><td>Yes</td><td>Small</td><td><span class="status failed">Error</span></td></tr>
+          <tr><td><input type="checkbox"></td><td><b>AHU-1004002</b><span class="muted2">South Office AHU</span></td><td class="bad">LXX</td><td>04.12</td><td>air handling unit</td><td>Yes</td><td class="bad"></td><td><span class="status failed">Error</span></td></tr>
+          <tr><td><input type="checkbox"></td><td><b>DDC-1098001</b><span class="muted2">Plant Controller</span></td><td>B02</td><td class="warn">B2.01</td><td>controller - ddc</td><td>No</td><td>N/A</td><td><span class="status queued">Warning</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:14px" class="grid">
+      <div class="issue critical"><div><span class="sev">Error · FCU-1041007</span><h4>Duplicate Instance Name</h4><p>Also exists in the Mechanical register — resolve before issue.</p></div><button class="linkbtn">Open asset</button></div>
+      <div class="issue"><div><span class="sev">Warning · DDC-1098001</span><h4>Space ID not in room reference</h4><p>B2.01 is not present in the current room-reference import.</p></div><button class="linkbtn">Open asset</button></div>
+    </div>
+  </section>
+</div>
+
+<script>
+  var COLORS=[["bg","--bg"],["surface","--surface"],["surface-2","--surface-2"],["surface-3","--surface-3"],["border","--border"],["ink","--ink"],["text","--text"],["muted","--muted"],["accent","--accent"],["accent-hover","--accent-hover"],["accent-bg","--accent-bg"],["green","--green"],["amber","--amber"],["red","--red"],["purple","--purple"]];
+  function hex(v){var c=getComputedStyle(document.documentElement).getPropertyValue(v).trim();return c;}
+  function paint(){document.getElementById('sw').innerHTML=COLORS.map(function(c){return '<div class="sw"><div class="chip-color" style="background:var('+c[1]+')"></div><div class="meta"><b>'+c[0]+'</b><code>'+hex(c[1])+'</code></div></div>';}).join('');}
+  function tg(){var h=document.documentElement;var d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'light':'dark');document.getElementById('themeBtn').textContent=d?'Use dark theme':'Use light theme';paint();}
+  paint();
+</script>
+</body>
+</html>
