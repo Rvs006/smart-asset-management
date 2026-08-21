@@ -2,6 +2,7 @@ import { useNavigate } from "react-router";
 import { useProject } from "../../app/project";
 import { useOverview } from "../../api/queries";
 import { downloadUrl } from "../../api/client";
+import { Info } from "../../app/Info";
 
 export function OverviewPage() {
   const { projectId } = useProject();
@@ -25,7 +26,7 @@ export function OverviewPage() {
         <article className={d.assets_with_errors ? "danger" : undefined}>
           <span>Assets with errors</span><strong>{d.assets_with_errors}</strong></article>
         <article className={d.duplicate_instance_names ? "danger" : undefined}>
-          <span>Cross-trade duplicates</span><strong>{d.duplicate_instance_names}</strong></article>
+          <span>Cross-trade duplicates<Info text="Instance Names that appear in more than one trade — the conflict Excel can't see across tabs. Resolve before issuing the consolidated register." /></span><strong>{d.duplicate_instance_names}</strong></article>
       </section>
 
       <section className="kpi-strip" style={{ marginBottom: 14 }}>
@@ -81,9 +82,11 @@ export function OverviewPage() {
         )}
       </section>
 
-      <section className="inline-actions">
-        <a className="secondary-button" href={downloadUrl(`/projects/${projectId}/export`)}>Export register (CSV)</a>
-        <a className="secondary-button" href={downloadUrl(`/projects/${projectId}/export/issues`)}>Export validation issues (CSV)</a>
+      <section className="inline-actions" style={{ flexWrap: "wrap" }}>
+        <a className="secondary-button" href={downloadUrl(`/projects/${projectId}/export`)}>Register (CSV)</a>
+        <a className="secondary-button" href={downloadUrl(`/projects/${projectId}/export?format=xlsx`)}>Register (XLSX)</a>
+        <a className="secondary-button" href={downloadUrl(`/projects/${projectId}/export/issues?format=xlsx`)}>Issues (XLSX)</a>
+        <a className="primary-button" href={downloadUrl(`/projects/${projectId}/export/report`)}>Progress report (XLSX)</a>
       </section>
     </div>
   );

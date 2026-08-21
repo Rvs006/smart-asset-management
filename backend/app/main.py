@@ -16,8 +16,8 @@ from fastapi.staticfiles import StaticFiles
 from .config import CORS_ORIGINS, SERVICE, VERSION
 from .db import init_db
 from .seed import seed_demo
-from .api.routes import (assets, export, naming, overview, projects,
-                         references, schema, trades, validation)
+from .api.routes import (assets, audit, config, export, naming, overview,
+                         projects, references, schema, trades, validation)
 
 app = FastAPI(title="Smart Asset Management API", version=VERSION)
 
@@ -30,7 +30,7 @@ app.add_middleware(
 
 API = "/api/v1"
 for module in (projects, references, schema, trades, assets, validation,
-               overview, export, naming):
+               overview, export, naming, audit, config):
     app.include_router(module.router, prefix=API)
 
 

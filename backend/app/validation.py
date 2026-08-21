@@ -24,6 +24,7 @@ from typing import Any
 
 _IPV4 = re.compile(r"^(?:\d{1,3}\.){3}\d{1,3}$")
 _MAC = re.compile(r"^(?:[0-9A-Fa-f]{2}[:-]){5}[0-9A-Fa-f]{2}$")
+_HOSTNAME = re.compile(r"^(?=.{1,253}$)(?!-)[A-Za-z0-9-]{1,63}(?<!-)(\.[A-Za-z0-9-]{1,63})*$")
 
 
 def _blank(v: Any) -> bool:
@@ -45,6 +46,14 @@ def _format_ok(value: str, rule: str) -> bool:
         return all(0 <= int(p) <= 255 for p in v.split("."))
     if rule == "mac":
         return bool(_MAC.match(v))
+    if rule == "hostname":
+        return bool(_HOSTNAME.match(v))
+    if rule.startswith("range:"):
+        try:
+            lo, hi = (int(x) for x in rule.split(":", 1)[1].split("-"))
+            return v.lstrip("-").isdigit() and lo <= int(v) <= hi
+        except ValueError:
+            return True
     return True
 
 
@@ -90,6 +99,23 @@ def validate_project(conn: sqlite3.Connection, project_id: int) -> list[dict]:
                     f"Duplicate Instance Name '{a['instance_name']}' — also in {others}.",
                     "unique across the whole project",
                 ))
+
+    # A2. uniqueness for any other field flagged validation_type='unique'
+    #     (e.g. a Globally Unique Identifier), scoped project-wide.
+    for f in fields:
+        if f["validation_type"] == "unique" and f["field_key"] != "instance_name":
+            seen: dict[str, list[dict]] = defaultdict(list)
+            for a in assets:
+                val = str(json.loads(a["metadata"] or "{}").get(f["field_key"], "")).strip()
+                if val:
+                    seen[val.upper()].append(a)
+            for val_up, group in seen.items():
+                if len(group) > 1:
+                    for a in group:
+                        issues.append(_issue(
+                            a["id"], f["field_key"], "error", "duplicate_value",
+                            f"{f['display_name']} is not unique across the project.",
+                            "a unique value"))
 
     # B–E. per-field, per-asset
     for a in assets:

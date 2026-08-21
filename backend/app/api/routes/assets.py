@@ -56,6 +56,9 @@ def create_asset(pid: int, body: AssetIn):
             "VALUES (?,?,?,?, 'manual')",
             (pid, body.trade_id, body.instance_name, json.dumps(body.metadata)))
         aid = cur.lastrowid
+        conn.execute("INSERT INTO audit_event (project_id,asset_id,action,after) VALUES (?,?,?,?)",
+                     (pid, aid, "create", json.dumps({"instance_name": body.instance_name,
+                                                      "metadata": body.metadata})))
         validation.persist(conn, pid, validation.validate_project(conn, pid))
     return {"id": aid}
 
@@ -83,9 +86,27 @@ def patch_asset(pid: int, aid: int, body: AssetPatch):
 @router.delete("/projects/{pid}/assets/{aid}")
 def delete_asset(pid: int, aid: int):
     with get_conn() as conn:
+        row = conn.execute("SELECT instance_name FROM asset WHERE id=? AND project_id=?",
+                           (aid, pid)).fetchone()
+        conn.execute("INSERT INTO audit_event (project_id,asset_id,action,before) VALUES (?,?,?,?)",
+                     (pid, aid, "delete", json.dumps({"instance_name": row["instance_name"] if row else ""})))
         conn.execute("DELETE FROM asset WHERE id=? AND project_id=?", (aid, pid))
         validation.persist(conn, pid, validation.validate_project(conn, pid))
     return {"deleted": aid}
+
+
+@router.post("/projects/{pid}/assets/bulk-delete")
+def bulk_delete(pid: int, body: dict):
+    ids = [int(i) for i in body.get("ids", [])]
+    if not ids:
+        return {"deleted": 0}
+    with get_conn() as conn:
+        marks = ",".join("?" for _ in ids)
+        conn.execute(f"DELETE FROM asset WHERE project_id=? AND id IN ({marks})", (pid, *ids))
+        conn.execute("INSERT INTO audit_event (project_id,action,after) VALUES (?,?,?)",
+                     (pid, "bulk_delete", json.dumps({"count": len(ids)})))
+        validation.persist(conn, pid, validation.validate_project(conn, pid))
+    return {"deleted": len(ids)}
 
 
 @router.post("/projects/{pid}/assets/import")
@@ -94,6 +115,9 @@ async def import_assets_route(pid: int, trade_id: int = Form(...), mode: str = F
     data = await file.read()
     with get_conn() as conn:
         result = import_assets(conn, pid, trade_id, data, file.filename or "assets.xlsx", mode)
+        conn.execute("INSERT INTO audit_event (project_id,action,after) VALUES (?,?,?)",
+                     (pid, "import", json.dumps({"file": file.filename, "mode": mode,
+                                                 "created": result["created"], "updated": result["updated"]})))
         summary = validation.run(conn, pid)
     return {**result, "validation": summary}
 

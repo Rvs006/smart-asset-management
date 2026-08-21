@@ -40,7 +40,7 @@ export function App() {
             </span>
           </NavLink>
           <div className="app-header-meta">
-            <span className="site-pill subtle">v0.1.1</span>
+            <span className="site-pill subtle">v0.1.2</span>
             <span className="site-pill" title="Selected project">
               {projectName ? projectName : "No project selected"}
             </span>

@@ -2,8 +2,9 @@ import { useState } from "react";
 import { useProject } from "../../app/project";
 import {
   useProjects, useProject as useProjectQuery, useReferences, useSchema, useTrades,
-  useNaming, useSeedDemo, useCreateProject,
+  useNaming, useSeedDemo, useCreateProject, useValidate,
 } from "../../api/queries";
+import { downloadUrl } from "../../api/client";
 
 export function ConfigurationPage() {
   const { projectId, setProjectId } = useProject();
@@ -15,6 +16,7 @@ export function ConfigurationPage() {
   const schema = useSchema(projectId);
   const trades = useTrades(projectId);
   const naming = useNaming(projectId);
+  const validate = useValidate(projectId);
   const [newName, setNewName] = useState("");
 
   const list = (projects.data as any[]) ?? [];
@@ -54,11 +56,22 @@ export function ConfigurationPage() {
             </div>
           </label>
         </div>
-        <div className="inline-actions" style={{ marginTop: 12 }}>
+        <div className="inline-actions" style={{ marginTop: 12, flexWrap: "wrap" }}>
           <button className="primary-button" disabled={seed.isPending}
             onClick={() => seed.mutate(undefined, { onSuccess: (r: any) => setProjectId(r.project_id) })}>
             {seed.isPending ? "Loading…" : "Load sample project"}
           </button>
+          {projectId ? (
+            <>
+              <button className="secondary-button" disabled={validate.isPending}
+                onClick={() => validate.mutate(undefined, {
+                  onSuccess: (s: any) => alert(`Validation complete: ${s.error_count} errors, ${s.warning_count} warnings.`),
+                })}>
+                {validate.isPending ? "Validating…" : "Validate project"}
+              </button>
+              <a className="secondary-button" href={downloadUrl(`/projects/${projectId}/config/export`)}>Export configuration (JSON)</a>
+            </>
+          ) : null}
         </div>
       </section>
 

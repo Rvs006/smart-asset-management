@@ -1,11 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router";
 import { useProject } from "../../app/project";
+import { Info } from "../../app/Info";
 import {
   useAssets, useIssues, useSchema, useTrades, usePatchAsset, useGenerateNames,
-  useImportAssets, useReferenceValues, type Asset, type SchemaField,
+  useImportAssets, useReferenceValues, useBulkDelete, useCreateAsset, useAudit,
+  type Asset, type SchemaField,
 } from "../../api/queries";
 import { downloadUrl } from "../../api/client";
+
+type StatusFilter = "all" | "error" | "warning" | "valid";
 
 export function AssetManagementPage() {
   const { projectId } = useProject();
@@ -13,9 +17,18 @@ export function AssetManagementPage() {
   const trades = useTrades(projectId);
   const tradeList = (trades.data as any[]) ?? [];
   const trade = params.get("trade") ?? tradeList[0]?.code ?? null;
+  const tradeMeta = tradeList.find((t) => t.code === trade);
+
   const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [selectedId, setSelectedId] = useState<number | null>(null);
-  const [tab, setTab] = useState<"details" | "validation">("details");
+  const [tab, setTab] = useState<"details" | "validation" | "history">("details");
+  const [checked, setChecked] = useState<Set<number>>(new Set());
+  const [hiddenCols, setHiddenCols] = useState<Set<string>>(new Set());
+  const [showCols, setShowCols] = useState(false);
+  const [showAdd, setShowAdd] = useState(false);
+  const [addName, setAddName] = useState("");
+  const [addDesc, setAddDesc] = useState("");
 
   const schema = useSchema(projectId);
   const assets = useAssets(projectId, trade, search);
@@ -23,9 +36,11 @@ export function AssetManagementPage() {
   const patch = usePatchAsset(projectId);
   const gen = useGenerateNames(projectId);
   const importAssets = useImportAssets(projectId);
+  const bulkDelete = useBulkDelete(projectId);
+  const createAsset = useCreateAsset(projectId);
+  const audit = useAudit(projectId, tab === "history" ? selectedId : null);
   const rowRefs = useRef<Record<number, HTMLTableRowElement | null>>({});
 
-  // reference option lists (fixed set of kinds)
   const levels = useReferenceValues(projectId, "level");
   const spaces = useReferenceValues(projectId, "space");
   const systems = useReferenceValues(projectId, "system");
@@ -36,14 +51,23 @@ export function AssetManagementPage() {
     return ((src?.data as any[]) ?? []).map((r) => r.code);
   };
 
-  const cols = useMemo(
+  const allCols = useMemo(
     () => ((schema.data as SchemaField[]) ?? []).filter((f) => f.visible && f.field_key !== "instance_name"),
     [schema.data],
   );
-  const rows = (assets.data as Asset[]) ?? [];
-  const selected = rows.find((a) => a.id === selectedId) ?? null;
+  const cols = allCols.filter((c) => !hiddenCols.has(c.field_key));
+  const allRows = (assets.data as Asset[]) ?? [];
+  const rows = allRows.filter((a) => {
+    if (statusFilter === "all") return true;
+    const hasErr = a.issues.some((i) => i.severity === "error");
+    const hasWarn = a.issues.some((i) => i.severity === "warning");
+    if (statusFilter === "error") return hasErr;
+    if (statusFilter === "warning") return hasWarn && !hasErr;
+    return a.issues.length === 0;
+  });
+  const selected = allRows.find((a) => a.id === selectedId) ?? null;
 
-  useEffect(() => { setSelectedId(null); }, [trade]);
+  useEffect(() => { setSelectedId(null); setChecked(new Set()); }, [trade]);
 
   const setTrade = (code: string) => setParams(code ? { trade: code } : {});
   const savingCell = (a: Asset, key: string, value: string) => {
@@ -51,66 +75,108 @@ export function AssetManagementPage() {
     else patch.mutate({ id: a.id, body: { metadata: { [key]: value } } });
   };
   const openAsset = (id: number) => {
-    setSelectedId(id);
+    setSelectedId(id); setTab("details");
     rowRefs.current[id]?.scrollIntoView({ block: "center", behavior: "smooth" });
   };
+  const toggleCheck = (id: number) => setChecked((s) => {
+    const n = new Set(s); n.has(id) ? n.delete(id) : n.add(id); return n;
+  });
+  const toggleAll = () => setChecked((s) => s.size === rows.length ? new Set() : new Set(rows.map((r) => r.id)));
 
-  const tradeMeta = tradeList.find((t) => t.code === trade);
-  const errorCount = rows.filter((r) => r.issues.some((i) => i.severity === "error")).length;
-  const dupCount = rows.filter((r) => r.issues.some((i) => i.rule === "duplicate_instance_name")).length;
-  const completeness = tradeMeta ? undefined : undefined;
+  const errorCount = allRows.filter((r) => r.issues.some((i) => i.severity === "error")).length;
+  const dupCount = allRows.filter((r) => r.issues.some((i) => i.rule.startsWith("duplicate"))).length;
+  const issueFor = (a: Asset, key: string) => a.issues.find((i) => i.field_key === key);
 
   if (!projectId) {
     return <div className="empty-workspace"><strong>No project selected</strong>
       <span>Pick a project on the Home or Configuration page.</span></div>;
   }
 
-  const issueFor = (a: Asset, key: string) =>
-    a.issues.find((i) => i.field_key === key);
-
   return (
     <div className="app-page">
-      {/* trade KPIs */}
       <section className="kpi-strip" style={{ marginBottom: 14 }}>
         <article><span>Selected trade</span><strong style={{ fontSize: 18 }}>{trade ?? "—"}</strong></article>
-        <article><span>Assets</span><strong>{rows.length}</strong></article>
+        <article><span>Assets</span><strong>{allRows.length}</strong></article>
         <article className={errorCount ? "danger" : undefined}><span>Assets with errors</span><strong>{errorCount}</strong></article>
-        <article className={dupCount ? "danger" : undefined}><span>Duplicate names</span><strong>{dupCount}</strong></article>
+        <article className={dupCount ? "danger" : undefined}><span>Duplicate names<Info text="Instance Names checked for uniqueness across every trade in the project, not only this one." /></span><strong>{dupCount}</strong></article>
       </section>
 
-      {/* toolbar */}
       <section className="surface" style={{ marginBottom: 14 }}>
         <div className="sam-toolbar">
-          <select className="control" style={{ maxWidth: 200 }} value={trade ?? ""}
-            onChange={(e) => setTrade(e.target.value)}>
+          <select className="control" style={{ maxWidth: 170 }} value={trade ?? ""} onChange={(e) => setTrade(e.target.value)}>
             {tradeList.map((t) => <option key={t.code} value={t.code}>{t.code} ({t.asset_count})</option>)}
           </select>
-          <input className="control grow" placeholder="Search instance name, level, room, manufacturer…"
-            value={search} onChange={(e) => setSearch(e.target.value)} />
+          <input className="control grow" placeholder="Search…" value={search} onChange={(e) => setSearch(e.target.value)} />
+          <select className="control" style={{ maxWidth: 150 }} value={statusFilter} onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}>
+            <option value="all">All statuses</option>
+            <option value="error">Errors</option>
+            <option value="warning">Warnings</option>
+            <option value="valid">Valid</option>
+          </select>
+          <button className={`secondary-button${showCols ? " selected" : ""}`} onClick={() => setShowCols((v) => !v)}>Columns</button>
           <label className="secondary-button" style={{ cursor: "pointer" }}>
             {importAssets.isPending ? "Importing…" : "Import"}
             <input type="file" accept=".csv,.xlsx" style={{ display: "none" }}
               onChange={(e) => {
-                const f = e.target.files?.[0];
-                if (!f || !tradeMeta) return;
+                const f = e.target.files?.[0]; if (!f || !tradeMeta) return;
                 const form = new FormData();
                 form.append("file", f); form.append("trade_id", String(tradeMeta.id)); form.append("mode", "create");
-                importAssets.mutate(form);
-                e.target.value = "";
+                importAssets.mutate(form); e.target.value = "";
               }} />
           </label>
-          <a className="secondary-button" href={downloadUrl(`/projects/${projectId}/export${tradeMeta ? `?trade=${tradeMeta.id}` : ""}`)}>Export</a>
-          <button className="secondary-button" disabled={gen.isPending}
-            onClick={() => tradeMeta && gen.mutate({ trade_id: tradeMeta.id, only_blank: true })}>
+          <a className="secondary-button" href={downloadUrl(`/projects/${projectId}/export${tradeMeta ? `?trade=${tradeMeta.id}` : ""}`)}>Export CSV</a>
+          <a className="secondary-button" href={downloadUrl(`/projects/${projectId}/export?format=xlsx${tradeMeta ? `&trade=${tradeMeta.id}` : ""}`)}>Export XLSX</a>
+          <button className="secondary-button" disabled={gen.isPending} onClick={() => tradeMeta && gen.mutate({ trade_id: tradeMeta.id, only_blank: true })}>
             {gen.isPending ? "Generating…" : "Generate names"}
           </button>
+          <button className="primary-button" onClick={() => setShowAdd((v) => !v)}>+ Add Asset</button>
         </div>
 
-        {/* grid */}
+        {showCols ? (
+          <div className="state-panel" style={{ marginBottom: 12 }}>
+            <strong style={{ marginBottom: 8 }}>Show columns</strong>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "6px 16px" }}>
+              {allCols.map((c) => (
+                <label key={c.field_key} style={{ display: "inline-flex", gap: 6, alignItems: "center", fontSize: 12 }}>
+                  <input type="checkbox" checked={!hiddenCols.has(c.field_key)}
+                    onChange={() => setHiddenCols((s) => { const n = new Set(s); n.has(c.field_key) ? n.delete(c.field_key) : n.add(c.field_key); return n; })} />
+                  {c.display_name}
+                </label>
+              ))}
+            </div>
+          </div>
+        ) : null}
+
+        {showAdd ? (
+          <div className="state-panel" style={{ marginBottom: 12 }}>
+            <strong style={{ marginBottom: 8 }}>Add asset to {trade}</strong>
+            <div className="sam-toolbar">
+              <input className="control" placeholder="Instance Name (or leave blank + generate)" value={addName} onChange={(e) => setAddName(e.target.value)} />
+              <input className="control grow" placeholder="Asset description" value={addDesc} onChange={(e) => setAddDesc(e.target.value)} />
+              <button className="primary-button" disabled={createAsset.isPending || !tradeMeta}
+                onClick={() => tradeMeta && createAsset.mutate(
+                  { trade_id: tradeMeta.id, instance_name: addName, metadata: { asset_description: addDesc, contractor_name: "Electracom" } },
+                  { onSuccess: () => { setAddName(""); setAddDesc(""); setShowAdd(false); } })}>Create</button>
+              <button className="secondary-button" onClick={() => setShowAdd(false)}>Cancel</button>
+            </div>
+          </div>
+        ) : null}
+
+        {checked.size > 0 ? (
+          <div className="inline-actions" style={{ marginBottom: 12 }}>
+            <span className="chip accent">{checked.size} selected</span>
+            <button className="secondary-button compact destructive" disabled={bulkDelete.isPending}
+              onClick={() => { if (confirm(`Delete ${checked.size} asset(s)?`)) bulkDelete.mutate([...checked], { onSuccess: () => setChecked(new Set()) }); }}>
+              Delete selected
+            </button>
+          </div>
+        ) : null}
+
         <div className="data-table-wrap results-scroll">
           <table className="data-table sam-grid">
             <thead>
               <tr>
+                <th><input type="checkbox" checked={rows.length > 0 && checked.size === rows.length} onChange={toggleAll} /></th>
                 <th>Instance Name</th>
                 {cols.map((c) => <th key={c.field_key}>{c.display_name}</th>)}
                 <th>Status</th>
@@ -119,14 +185,17 @@ export function AssetManagementPage() {
             <tbody>
               {rows.map((a) => {
                 const rowError = a.issues.some((i) => i.severity === "error");
+                const rowWarn = a.issues.some((i) => i.severity === "warning");
                 const nameIssue = issueFor(a, "instance_name");
                 return (
                   <tr key={a.id} ref={(el) => { rowRefs.current[a.id] = el; }}
                     className={selectedId === a.id ? "selected sam-clickable" : "sam-clickable"}
-                    onClick={() => setSelectedId(a.id)}>
+                    onClick={() => { setSelectedId(a.id); setTab("details"); }}>
+                    <td onClick={(e) => e.stopPropagation()}>
+                      <input type="checkbox" checked={checked.has(a.id)} onChange={() => toggleCheck(a.id)} />
+                    </td>
                     <td className={nameIssue ? "cell-bad" : ""}>
-                      <input className="cell-input id-main" defaultValue={a.instance_name}
-                        onClick={(e) => e.stopPropagation()}
+                      <input className="cell-input id-main" defaultValue={a.instance_name} onClick={(e) => e.stopPropagation()}
                         onBlur={(e) => e.target.value !== a.instance_name && savingCell(a, "instance_name", e.target.value)} />
                       <span className="id-sub">{a.metadata.asset_description ?? ""}</span>
                     </td>
@@ -138,36 +207,32 @@ export function AssetManagementPage() {
                       return (
                         <td key={c.field_key} className={cls} onClick={(e) => e.stopPropagation()}>
                           {isRef ? (
-                            <select className="cell-select" defaultValue={String(val)}
-                              onChange={(e) => savingCell(a, c.field_key, e.target.value)}>
+                            <select className="cell-select" defaultValue={String(val)} onChange={(e) => savingCell(a, c.field_key, e.target.value)}>
                               <option value="">—</option>
-                              {[String(val), ...optionsFor(c.reference_kind)]
-                                .filter((v, i, arr) => v && arr.indexOf(v) === i)
-                                .map((o) => <option key={o} value={o}>{o}</option>)}
+                              {[String(val), ...optionsFor(c.reference_kind)].filter((v, i, arr) => v && arr.indexOf(v) === i).map((o) => <option key={o} value={o}>{o}</option>)}
                             </select>
                           ) : (
-                            <input className="cell-input" defaultValue={String(val)}
-                              onBlur={(e) => e.target.value !== String(val) && savingCell(a, c.field_key, e.target.value)} />
+                            <input className="cell-input" defaultValue={String(val)} onBlur={(e) => e.target.value !== String(val) && savingCell(a, c.field_key, e.target.value)} />
                           )}
                         </td>
                       );
                     })}
-                    <td><span className={`status-token ${rowError ? "failed" : "ready"}`}>{rowError ? "Error" : "Valid"}</span></td>
+                    <td><span className={`status-token ${rowError ? "failed" : rowWarn ? "queued" : "ready"}`}>{rowError ? "Error" : rowWarn ? "Warning" : "Valid"}</span></td>
                   </tr>
                 );
               })}
               {rows.length === 0 ? (
-                <tr><td colSpan={cols.length + 2}>
-                  <div className="empty-workspace"><strong>No assets</strong>
-                    <span>Import a sheet for this trade, or load the sample project.</span></div>
+                <tr><td colSpan={cols.length + 3}>
+                  <div className="empty-workspace"><strong>No assets match</strong>
+                    <span>{allRows.length ? "Adjust the status filter or search." : "Import a sheet or load the sample project."}</span></div>
                 </td></tr>
               ) : null}
             </tbody>
           </table>
         </div>
+        <p className="field-note" style={{ marginTop: 10 }}>Showing {rows.length} of {allRows.length} assets.</p>
       </section>
 
-      {/* selected-asset detail */}
       {selected ? (
         <section className="surface" style={{ marginBottom: 14 }}>
           <div className="surface-heading">
@@ -176,30 +241,39 @@ export function AssetManagementPage() {
               {selected.issues.length ? `${selected.issues.length} issues` : "Validated"}</span>
           </div>
           <div className="inline-actions" style={{ marginBottom: 12 }}>
-            <button className={`secondary-button compact${tab === "details" ? " selected" : ""}`} onClick={() => setTab("details")}>Details</button>
-            <button className={`secondary-button compact${tab === "validation" ? " selected" : ""}`} onClick={() => setTab("validation")}>Validation</button>
+            {(["details", "validation", "history"] as const).map((t) => (
+              <button key={t} className={`secondary-button compact${tab === t ? " selected" : ""}`} onClick={() => setTab(t)}>
+                {t[0].toUpperCase() + t.slice(1)}</button>
+            ))}
           </div>
           {tab === "details" ? (
             <div className="sam-detail-grid">
-              {cols.map((c) => (
-                <div key={c.field_key}><span>{c.display_name}</span>
-                  <b>{String(selected.metadata[c.field_key] ?? "—") || "—"}</b></div>
+              {allCols.map((c) => (
+                <div key={c.field_key}><span>{c.display_name}</span><b>{String(selected.metadata[c.field_key] ?? "—") || "—"}</b></div>
               ))}
             </div>
-          ) : (
+          ) : tab === "validation" ? (
             selected.issues.length ? selected.issues.map((i, n) => (
               <div className="state-panel error" key={n} style={{ marginBottom: 8 }}>
-                <strong>{i.field_key || i.rule}</strong><span>{i.message}</span>
-              </div>
+                <strong>{i.field_key || i.rule}</strong><span>{i.message}</span></div>
             )) : <div className="state-panel success"><strong>No validation issues</strong><span>This asset passes every rule.</span></div>
+          ) : (
+            audit.isLoading ? <div className="field-note">Loading history…</div>
+              : ((audit.data as any[]) ?? []).length ? ((audit.data as any[]).map((e, n) => (
+                <div className="sam-fault-row" key={n} style={{ gridTemplateColumns: "120px 1fr auto" }}>
+                  <b className="id-main">{e.action}</b>
+                  <span>{e.after ? String(e.after).slice(0, 120) : e.before ? String(e.before).slice(0, 120) : ""}</span>
+                  <span className="field-note">{e.at}</span>
+                </div>
+              ))) : <div className="state-panel"><strong>No history yet</strong><span>Edits, imports and deletes for this asset will appear here.</span></div>
           )}
         </section>
       ) : null}
 
-      {/* fault list */}
       <section className="surface">
         <div className="surface-heading">
           <div><span className="eyebrow">Faults</span><h3>Validation issues in {trade}</h3></div>
+          <a className="link-button" href={downloadUrl(`/projects/${projectId}/export/issues?format=xlsx`)}>Export issues (XLSX)</a>
         </div>
         {(issues.data ?? []).length === 0 ? (
           <div className="state-panel success"><strong>No issues in this trade</strong><span>Every asset passes validation.</span></div>
@@ -210,8 +284,7 @@ export function AssetManagementPage() {
                 <b className="id-main">{i.instance_name ?? "—"}</b>
                 <span>{i.message}</span>
                 <span className={`status-token ${i.severity === "error" ? "failed" : "queued"}`}>{i.severity}</span>
-                <button className="secondary-button compact"
-                  onClick={() => i.asset_id && openAsset(i.asset_id)}>Open asset</button>
+                <button className="secondary-button compact" onClick={() => i.asset_id && openAsset(i.asset_id)}>Open asset</button>
               </div>
             ))}
           </div>

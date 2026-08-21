@@ -111,3 +111,34 @@ export function useCreateProject() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ["projects"] }),
   });
 }
+
+export const useAudit = (pid: number | null, assetId: number | null) =>
+  useQuery({
+    queryKey: ["audit", pid, assetId],
+    queryFn: () => api.get(`/projects/${pid}/audit${assetId ? `?asset=${assetId}` : ""}`),
+    enabled: !!pid && !!assetId,
+  });
+
+export function useBulkDelete(pid: number | null) {
+  const invalidate = useInvalidateProject(pid);
+  return useMutation({
+    mutationFn: (ids: number[]) => api.post(`/projects/${pid}/assets/bulk-delete`, { ids }),
+    onSuccess: invalidate,
+  });
+}
+
+export function useCreateAsset(pid: number | null) {
+  const invalidate = useInvalidateProject(pid);
+  return useMutation({
+    mutationFn: (body: any) => api.post(`/projects/${pid}/assets`, body),
+    onSuccess: invalidate,
+  });
+}
+
+export function useValidate(pid: number | null) {
+  const invalidate = useInvalidateProject(pid);
+  return useMutation({
+    mutationFn: () => api.post(`/projects/${pid}/validate`),
+    onSuccess: invalidate,
+  });
+}
