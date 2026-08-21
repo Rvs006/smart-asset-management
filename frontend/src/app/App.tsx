@@ -16,6 +16,8 @@ const TITLES: Record<string, [string, string]> = {
   "/configuration": ["Configuration", "Create or select a project, define naming, load reference lists and the register template."],
   "/overview": ["Overview", "Completion and data quality across every trade register, and cross-trade conflicts."],
   "/assets": ["Asset Management", "View, edit, filter and validate each trade's asset register."],
+  "/brief": ["Product brief", "What the Smart Asset Management Tool is, and how it works."],
+  "/learning": ["Learning", "Role-based walkthroughs — get productive fast."],
 };
 
 export function App() {
@@ -38,10 +40,12 @@ export function App() {
             </span>
           </NavLink>
           <div className="app-header-meta">
-            <span className="site-pill subtle">v0.1</span>
+            <span className="site-pill subtle">v0.1.1</span>
             <span className="site-pill" title="Selected project">
               {projectName ? projectName : "No project selected"}
             </span>
+            <NavLink className="header-pill" to="/brief" title="What the tool is and how it works">Brief</NavLink>
+            <NavLink className="header-pill" to="/learning" title="Role-based walkthroughs">Learning</NavLink>
             <ThemeToggle />
           </div>
         </div>
