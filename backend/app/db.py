@@ -55,7 +55,16 @@ CREATE TABLE IF NOT EXISTS schema_field (
   auto_generated INTEGER NOT NULL DEFAULT 0,
   editable INTEGER NOT NULL DEFAULT 1,
   visible INTEGER NOT NULL DEFAULT 1,
+  responsibility TEXT NOT NULL DEFAULT '',       -- ''|trade|us : who populates this
   export_order INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS naming_preset (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  standard TEXT NOT NULL DEFAULT 'BDNS',
+  segments TEXT NOT NULL DEFAULT '[]',            -- JSON list of segment dicts
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
 CREATE TABLE IF NOT EXISTS naming_scheme (
@@ -143,9 +152,17 @@ def get_conn() -> Iterator[sqlite3.Connection]:
         conn.close()
 
 
+def _migrate(conn: sqlite3.Connection) -> None:
+    """Additive migrations for DBs created by an older version."""
+    cols = {r["name"] for r in conn.execute("PRAGMA table_info(schema_field)")}
+    if "responsibility" not in cols:
+        conn.execute("ALTER TABLE schema_field ADD COLUMN responsibility TEXT NOT NULL DEFAULT ''")
+
+
 def init_db() -> None:
     with get_conn() as conn:
         conn.executescript(SCHEMA)
+        _migrate(conn)
 
 
 if __name__ == "__main__":

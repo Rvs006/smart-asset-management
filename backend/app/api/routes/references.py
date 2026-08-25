@@ -2,6 +2,8 @@ from fastapi import APIRouter, File, Form, UploadFile
 
 from ...db import get_conn
 from ...importer import import_reference_sheet, REF_COLUMNS
+from ...models import ReferenceIn
+from ... import validation
 
 router = APIRouter()
 
@@ -27,4 +29,23 @@ async def import_references(pid: int, kind: str = Form(...), file: UploadFile = 
     data = await file.read()
     with get_conn() as conn:
         n = import_reference_sheet(conn, pid, kind, data, file.filename or "upload.xlsx")
+        validation.run(conn, pid)
     return {"kind": kind, "imported": n}
+
+
+@router.post("/projects/{pid}/references", status_code=201)
+def add_reference(pid: int, body: ReferenceIn):
+    with get_conn() as conn:
+        cur = conn.execute(
+            "INSERT INTO reference_value (project_id,kind,code,label,abbreviation) VALUES (?,?,?,?,?)",
+            (pid, body.kind, body.code.strip(), body.label.strip(), body.abbreviation.strip()))
+        validation.run(conn, pid)
+        return {"id": cur.lastrowid}
+
+
+@router.delete("/projects/{pid}/references/{rid}")
+def delete_reference(pid: int, rid: int):
+    with get_conn() as conn:
+        conn.execute("DELETE FROM reference_value WHERE id=? AND project_id=?", (rid, pid))
+        validation.run(conn, pid)
+    return {"deleted": rid}

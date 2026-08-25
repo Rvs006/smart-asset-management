@@ -2,9 +2,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "./client";
 
 export type SchemaField = {
-  field_key: string; display_name: string; required: string; validation_type: string;
+  id: number; field_key: string; display_name: string; required: string; validation_type: string;
   reference_kind: string; visible: number; export_order: number; auto_generated: number;
-  editable: number; conditional_expr: string; format_rule: string;
+  editable: number; conditional_expr: string; format_rule: string; responsibility: string;
 };
 export type Issue = {
   asset_id: number | null; field_key: string; severity: string; rule: string;
@@ -141,4 +141,48 @@ export function useValidate(pid: number | null) {
     mutationFn: () => api.post(`/projects/${pid}/validate`),
     onSuccess: invalidate,
   });
+}
+
+// --- config editing (v0.1.3) ---
+export function useAddField(pid: number | null) {
+  const inv = useInvalidateProject(pid);
+  return useMutation({ mutationFn: (body: any) => api.post(`/projects/${pid}/schema/field`, body), onSuccess: inv });
+}
+export function usePatchField(pid: number | null) {
+  const inv = useInvalidateProject(pid);
+  return useMutation({ mutationFn: ({ id, body }: { id: number; body: any }) => api.patch(`/projects/${pid}/schema/field/${id}`, body), onSuccess: inv });
+}
+export function useDeleteField(pid: number | null) {
+  const inv = useInvalidateProject(pid);
+  return useMutation({ mutationFn: (id: number) => api.del(`/projects/${pid}/schema/field/${id}`), onSuccess: inv });
+}
+export function useAddReference(pid: number | null) {
+  const inv = useInvalidateProject(pid);
+  return useMutation({ mutationFn: (body: any) => api.post(`/projects/${pid}/references`, body), onSuccess: inv });
+}
+export function useDeleteReference(pid: number | null) {
+  const inv = useInvalidateProject(pid);
+  return useMutation({ mutationFn: (id: number) => api.del(`/projects/${pid}/references/${id}`), onSuccess: inv });
+}
+export function useAddTrade(pid: number | null) {
+  const inv = useInvalidateProject(pid);
+  return useMutation({ mutationFn: (body: any) => api.post(`/projects/${pid}/trades`, body), onSuccess: inv });
+}
+export function usePatchTrade(pid: number | null) {
+  const inv = useInvalidateProject(pid);
+  return useMutation({ mutationFn: ({ id, body }: { id: number; body: any }) => api.patch(`/projects/${pid}/trades/${id}`, body), onSuccess: inv });
+}
+export function useDeleteTrade(pid: number | null) {
+  const inv = useInvalidateProject(pid);
+  return useMutation({ mutationFn: (id: number) => api.del(`/projects/${pid}/trades/${id}`), onSuccess: inv });
+}
+export const useNamingPresets = (pid: number | null) =>
+  useQuery({ queryKey: ["presets", pid], queryFn: () => api.get(`/projects/${pid}/naming/presets`), enabled: !!pid });
+export function useApplyPreset(pid: number | null) {
+  const inv = useInvalidateProject(pid);
+  return useMutation({ mutationFn: (preset_id: string) => api.post(`/projects/${pid}/naming/apply-preset`, { preset_id }), onSuccess: inv });
+}
+export function useSetNaming(pid: number | null) {
+  const inv = useInvalidateProject(pid);
+  return useMutation({ mutationFn: (body: any) => api.post(`/projects/${pid}/naming`, body), onSuccess: inv });
 }

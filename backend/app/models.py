@@ -43,3 +43,61 @@ class AssetPatch(BaseModel):
 class GenerateNamesIn(BaseModel):
     trade_id: int | None = None
     only_blank: bool = True
+
+
+class SchemaFieldIn(BaseModel):
+    field_key: str = ""
+    display_name: str
+    grp: str = ""
+    data_type: str = "text"
+    required: str = "no"
+    conditional_expr: str = ""
+    validation_type: str = "none"
+    reference_kind: str = ""
+    format_rule: str = ""
+    responsibility: str = ""
+    visible: bool = True
+
+
+class SchemaFieldPatch(BaseModel):
+    display_name: str | None = None
+    required: str | None = None
+    validation_type: str | None = None
+    reference_kind: str | None = None
+    format_rule: str | None = None
+    responsibility: str | None = None
+    visible: bool | None = None
+    export_order: int | None = None
+
+
+class ReferenceIn(BaseModel):
+    kind: str
+    code: str
+    label: str = ""
+    abbreviation: str = ""
+
+
+class SegmentIn(BaseModel):
+    sequence: int
+    name: str
+    source_field: str = ""
+    segment_type: str = "reference"
+    fixed_value: str = ""
+    length: int = 0
+    pad_char: str = "0"
+    pad_dir: str = "left"
+    delimiter_before: str = ""
+
+
+class NamingSchemeIn(BaseModel):
+    name: str = "Project naming"
+    standard: str = "BDNS"
+    mode: str = "auto"
+    case_mode: str = "upper"
+    segments: list[SegmentIn] = []
+
+
+class NamingPresetIn(BaseModel):
+    name: str
+    standard: str = "BDNS"
+    segments: list[SegmentIn] = []

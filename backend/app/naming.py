@@ -105,6 +105,44 @@ DEFAULT_SEGMENTS = [
 ]
 
 
+# A second, simpler convention so the preset picker has choices out of the box.
+TYPE_LEVEL_NUMBER = [
+    dict(sequence=1, name="Abbreviation", source_field="abbreviation", segment_type="lookup",
+         fixed_value="", length=0, pad_char="0", pad_dir="left", delimiter_before=""),
+    dict(sequence=2, name="Floor", source_field="level", segment_type="reference",
+         fixed_value="", length=2, pad_char="0", pad_dir="left", delimiter_before="-"),
+    dict(sequence=3, name="Unique", source_field="unique_local_number", segment_type="number",
+         fixed_value="", length=4, pad_char="0", pad_dir="left", delimiter_before="-"),
+]
+
+BUILTIN_PRESETS = [
+    {"name": "BDNS — Abbrev-Building/Floor/Zone/Number (e.g. AHU-1020013)",
+     "standard": "BDNS", "segments": DEFAULT_SEGMENTS},
+    {"name": "Simple — Abbrev-Floor-Number (e.g. AHU-04-0013)",
+     "standard": "Custom", "segments": TYPE_LEVEL_NUMBER},
+]
+
+
+def set_scheme(conn: sqlite3.Connection, project_id: int, name: str, standard: str,
+               mode: str, case_mode: str, segments: list[dict]) -> int:
+    """Replace the project's naming scheme + segments."""
+    old = conn.execute("SELECT id FROM naming_scheme WHERE project_id=?", (project_id,)).fetchone()
+    if old:
+        conn.execute("DELETE FROM naming_segment WHERE scheme_id=?", (old["id"],))
+        conn.execute("DELETE FROM naming_scheme WHERE id=?", (old["id"],))
+    sid = conn.execute(
+        "INSERT INTO naming_scheme (project_id,name,standard,mode,case_mode) VALUES (?,?,?,?,?)",
+        (project_id, name, standard, mode, case_mode)).lastrowid
+    for i, s in enumerate(sorted(segments, key=lambda x: x.get("sequence", 0))):
+        conn.execute(
+            "INSERT INTO naming_segment (scheme_id,sequence,name,source_field,segment_type,"
+            "fixed_value,length,pad_char,pad_dir,delimiter_before) VALUES (?,?,?,?,?,?,?,?,?,?)",
+            (sid, s.get("sequence", i + 1), s.get("name", ""), s.get("source_field", ""),
+             s.get("segment_type", "reference"), s.get("fixed_value", ""), s.get("length", 0),
+             s.get("pad_char", "0"), s.get("pad_dir", "left"), s.get("delimiter_before", "")))
+    return sid
+
+
 def demo() -> None:
     vals1 = {"abbreviation": "AHU", "building_reference": "1", "level": "2",
              "operational_zone_reference": "0", "unique_local_number": "13"}

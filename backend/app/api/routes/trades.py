@@ -22,3 +22,22 @@ def add_trade(pid: int, body: TradeIn):
             "INSERT INTO trade (project_id,code,name,system_owner) VALUES (?,?,?,?)",
             (pid, body.code, body.name, body.system_owner))
         return dict(conn.execute("SELECT * FROM trade WHERE id=?", (cur.lastrowid,)).fetchone())
+
+
+@router.patch("/projects/{pid}/trades/{tid}")
+def patch_trade(pid: int, tid: int, body: TradeIn):
+    with get_conn() as conn:
+        conn.execute("UPDATE trade SET code=?, name=?, system_owner=? WHERE id=? AND project_id=?",
+                     (body.code, body.name, body.system_owner, tid, pid))
+        return {"id": tid}
+
+
+@router.delete("/projects/{pid}/trades/{tid}")
+def delete_trade(pid: int, tid: int):
+    with get_conn() as conn:
+        n = conn.execute("SELECT COUNT(*) c FROM asset WHERE trade_id=?", (tid,)).fetchone()["c"]
+        if n:
+            from fastapi import HTTPException
+            raise HTTPException(409, f"Trade has {n} assets — delete or move them first.")
+        conn.execute("DELETE FROM trade WHERE id=? AND project_id=?", (tid, pid))
+    return {"deleted": tid}

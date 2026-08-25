@@ -68,6 +68,22 @@ def overview(pid: int):
     cross = [{"instance_name": nm, "trades": sorted(ts)}
              for nm, ts in name_trades.items() if len(ts) > 1]
 
+    # completeness split by who's responsible (drives deliverable tracking)
+    resp_stats = {"trade": {"applicable": 0, "filled": 0}, "us": {"applicable": 0, "filled": 0},
+                  "unset": {"applicable": 0, "filled": 0}}
+    for a in assets:
+        meta = json.loads(a["metadata"] or "{}")
+        for f in fields:
+            if not _applicable_required(f, meta):
+                continue
+            bucket = f["responsibility"] if f["responsibility"] in ("trade", "us") else "unset"
+            resp_stats[bucket]["applicable"] += 1
+            val = a["instance_name"] if f["field_key"] == "instance_name" else meta.get(f["field_key"])
+            if val not in (None, "") and str(val).strip():
+                resp_stats[bucket]["filled"] += 1
+    for b in resp_stats.values():
+        b["pct"] = round(100 * b["filled"] / b["applicable"], 1) if b["applicable"] else None
+
     qr_required = sum(1 for a in assets
                       if str(json.loads(a["metadata"] or "{}").get("qr_code_required", "")).strip().upper() == "YES")
     overall_comp = round(100 * sum(completeness(a) for a in assets) / len(assets), 1) if assets else 0.0
@@ -87,4 +103,5 @@ def overview(pid: int):
         "last_update": last_update,
         "trades": per_trade,
         "issue_total": len(issues),
+        "responsibility": resp_stats,
     }
