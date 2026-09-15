@@ -94,9 +94,15 @@
 .sam-trade-tab.active { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 .sam-trade-tab .count { opacity: .7; margin-left: 5px; }
 
-/* Expand the register to (almost) full viewport width, breaking the 1180 column */
-.sam-expanded { width: 94vw; margin-left: calc(-47vw + 50%); }
-.sam-expanded .results-scroll { max-height: min(76vh, 900px); }
+/* Asset Management is the one wide page (App.tsx adds .wide on /assets): the
+   1180px column is lifted for the whole shell so header, title and grid share
+   the same gutters, and the grid keeps its own scroller. Never break out of
+   .page-frame with negative margins — it and body clip horizontal overflow. */
+.console-shell.wide .app-brand-bar,
+.console-shell.wide .app-tabs,
+.console-shell.wide .page-titlebar,
+.console-shell.wide .page-frame { max-width: none; }
+.console-shell.wide .results-scroll { max-height: min(72vh, 900px); }
 
 .sam-grid th.sortable { cursor: pointer; user-select: none; }
 .sam-grid th.sortable:hover { color: var(--accent); }
