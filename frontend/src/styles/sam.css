@@ -104,6 +104,14 @@
 .console-shell.wide .page-frame { max-width: none; }
 .console-shell.wide .results-scroll { max-height: min(72vh, 900px); }
 
+/* The shared SCT mobile rule (max-width:720px) drops page gutters to 14px.
+   DESIGN.md keeps the wide /assets route on the documented 24px page-padding,
+   so restore it here for that route only — other pages keep SCT's mobile gutter. */
+@media (max-width: 720px) {
+  .console-shell.wide .page-titlebar,
+  .console-shell.wide .page-frame { padding-inline: 24px; }
+}
+
 .sam-grid th.sortable { cursor: pointer; user-select: none; }
 .sam-grid th.sortable:hover { color: var(--accent); }
 .sam-grid th .sort-arrow { margin-left: 4px; color: var(--accent); }
