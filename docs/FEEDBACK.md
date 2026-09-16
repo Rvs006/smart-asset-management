@@ -25,7 +25,7 @@ Source: "Smart Asset Management Tool v0.1.3 Notes.docx". Build tasks are Phase 5
 | 2 | Asset Management | Expand button breaks the table: left side clipped, scrollbars gone, Collapse only visible at 175% zoom. | Bug | TASK-046 | Built — Expand removed; the Asset Management page is full width. |
 | 3 | Asset Management | Table should cover the whole width of the screen (registers have many columns). | Change | TASK-046 | Built — shell, title and grid span the screen on /assets; grid keeps its own scroller. |
 | 4 | Asset Management | Drag columns wider or narrower. | Feature | TASK-048 | Planned |
-| 5 | Asset Management | Borders on the table; left-align the data. | Change | TASK-047 | Planned |
+| 5 | Asset Management | Borders on the table; left-align the data. | Change | TASK-047 | Built — 1px borders on every row and column; all cell data left-aligned. |
 | 6 | Configuration / Asset Management | Column heading tinted light green when the trade is responsible, light red when MSI is. | Feature | TASK-051 | Planned |
 | 7 | Asset Management | Duplicate the selected row(s). | Feature | TASK-053 | Planned |
 | 8 | Asset Management | Undo / redo the last entry or deletion. | Feature | TASK-054 | Planned |

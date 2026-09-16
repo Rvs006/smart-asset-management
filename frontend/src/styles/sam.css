@@ -11,6 +11,15 @@
 }
 .sam-toolbar .grow { flex: 1 1 220px; }
 
+/* #5 borders separating every row and column + left-aligned data.
+   border-collapse:collapse is inherited from .data-table, so cells share
+   one 1px line. sam.css loads last, so this wins the tie with the base
+   .data-table bottom-only border. */
+.sam-grid th,
+.sam-grid td { border: 1px solid var(--border); text-align: left; }
+.sam-grid td .cell-input,
+.sam-grid td .cell-select { text-align: left; }
+
 /* Register grid: validation on the cell */
 .sam-grid td.cell-bad { background: var(--red-bg); }
 .sam-grid td.cell-warn { background: var(--amber-bg); }
