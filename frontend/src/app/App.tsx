@@ -26,9 +26,12 @@ export function App() {
   const projectQuery = useProjectQuery(projectId);
   const [title, subtitle] = TITLES[location.pathname] ?? ["Workspace", ""];
   const projectName = projectQuery.data?.name;
+  // Registers run to dozens of columns: the Asset Management route lifts the
+  // 1180px column so the grid can use the whole screen (TASK-046).
+  const wide = location.pathname === "/assets";
 
   return (
-    <div className="console-shell">
+    <div className={`console-shell${wide ? " wide" : ""}`}>
       <header className="app-header">
         <div className="app-brand-bar">
           <NavLink className="app-brand" to="/">

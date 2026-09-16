@@ -95,6 +95,7 @@ spacing:
   card-gap: 14px
   page-padding: 24px
   content-width: 1180px
+  grid-check-column: 40px    # register grid: checkbox column width = sticky offset of the next column
   control-height: 44px
   control-height-compact: 36px
 components:
@@ -245,10 +246,10 @@ System font only: `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system
 
 ## Layout & Spacing
 
-- **Content width:** one 1180px column, `page-padding` 24px each side. No sidebar — navigation is the header tab row.
+- **Content width:** one 1180px column, `page-padding` 24px each side. No sidebar — navigation is the header tab row. One exception: the Asset Management page (`/assets`) lifts the column for the whole shell (header, title, page frame) because registers run to dozens of columns; the 24px `page-padding` stays and the grid keeps its own scroller. Never break out of the page frame with negative margins — it and `body` clip horizontal overflow.
 - **Vertical rhythm:** pages are a vertical stack of cards with `card-gap` 14px; card interior padding 24px; 60px bottom padding.
 - **Controls:** 44px tall (compact 36px), 8px radius. Two-column form grids (`field-grid`) at 12px gap.
-- **Tables:** full page width, header row on `surface-2`, cells wrap; wide grids scroll inside a bordered `overflow-x:auto` wrap with sticky headers (`.results-scroll`, max-height ~60vh). The page body itself never scrolls sideways.
+- **Tables:** full page width, header row on `surface-2`, cells wrap; wide grids scroll inside a bordered `overflow-x:auto` wrap with sticky headers (`.results-scroll`, max-height ~60vh; the register grid on `/assets` uses ~72vh). The page body itself never scrolls sideways. In the register grid the checkbox column is fixed at `grid-check-column` (40px), excluded from column resizing, and the Instance Name column is pinned at that same offset.
 
 ## Elevation & Depth
 

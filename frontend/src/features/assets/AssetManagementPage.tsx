@@ -31,7 +31,6 @@ export function AssetManagementPage() {
   const [colFilters, setColFilters] = useState<Record<string, string>>({});
   const [sortKey, setSortKey] = useState<string | null>(null);
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
-  const [expanded, setExpanded] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
   const [addName, setAddName] = useState("");
   const [addDesc, setAddDesc] = useState("");
@@ -139,7 +138,7 @@ export function AssetManagementPage() {
         <article><span>Our-owned populated</span><strong>{resp?.us?.pct ?? "—"}%</strong></article>
       </section>
 
-      <section className={`surface${expanded ? " sam-expanded" : ""}`} style={{ marginBottom: 14 }}>
+      <section className="surface" style={{ marginBottom: 14 }}>
         <div className="sam-toolbar">
           <select className="control" style={{ maxWidth: 150 }} value={trade ?? ""} onChange={(e) => setTrade(e.target.value)}>
             {tradeList.map((t) => <option key={t.code} value={t.code}>{t.code} ({t.asset_count})</option>)}
@@ -156,7 +155,6 @@ export function AssetManagementPage() {
           </label>
           <a className="secondary-button" href={downloadUrl(`/projects/${projectId}/export?format=xlsx${tradeMeta ? `&trade=${tradeMeta.id}` : ""}`)}>Export XLSX</a>
           <button className="secondary-button" disabled={gen.isPending} onClick={() => tradeMeta && gen.mutate({ trade_id: tradeMeta.id, only_blank: true })}>{gen.isPending ? "Generating…" : "Generate names"}</button>
-          <button className={`secondary-button${expanded ? " selected" : ""}`} onClick={() => setExpanded((v) => !v)}>{expanded ? "Collapse" : "Expand"}</button>
           <button className="primary-button" onClick={() => setShowAdd((v) => !v)}>+ Add Asset</button>
         </div>
 
